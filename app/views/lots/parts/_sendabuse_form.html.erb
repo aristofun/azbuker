@@ -1,0 +1,40 @@
+<div class="span9" id="abuse_form">
+  <!-- Message to ABUSE-->
+  <% @user_message ||= UserMessage.new
+     @user_message.lotid ||= lotid
+     @user_message.userid ||= userid
+     @captcha_error ||= flash[:captcha_error]
+  %>
+  <%= form_for(@user_message, :url => abuse_path, :method => :post,
+               :builder => BootstrapFormBuilder, :html => {:class => 'sendmsg'},
+               :remote => true) do |f| %>
+
+      <fieldset>
+        <div class="clearfix">
+          <div class="input"><strong>Жалоба на объявление</strong></div>
+        </div>
+
+        <%= f.email_field :email, :class => 'span7', :alt_text => 'Мы никому его не передаем',
+                          :id => 'abuse_input', :value => (user_signed_in?) ? current_user.email : '' %>
+        <a name="abuse"> </a>
+
+        <%= f.select :type, abuses_rev, {}, {:class => "span7"} %>
+
+        <%= f.text_area :text, :class => 'span7', :rows => 4 %>
+
+        <div class="clearfix" id="abuse_block">
+          <%= render :partial => 'lots/parts/captcha_block' %>
+        </div>
+        <%= f.hidden_field :userid %>
+        <%= f.hidden_field :lotid %>
+        <div class="clearfix">
+          <div class="input">
+            <%= f.submit "Отправить", :class => 'btn danger' %>
+          </div>
+        </div>
+      </fieldset>
+      <script type="text/javascript">
+          $("div#captcha_div").appendTo('div#abuse_block')
+      </script>
+  <% end %>
+</div>

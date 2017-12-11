@@ -1,0 +1,11 @@
+<label for="yoCaptcha">
+  <% if @captcha_error.nil? %>
+      Проверка:
+  <% else %>
+      <span class="label important">Ошибка:</span>
+  <% end %>
+</label>
+
+<div class="input" id="captcha_div">
+  <%= recaptcha_tags(:display => {:lang => 'ru', :theme => 'white'}, :ajax => true) -%>
+</div>

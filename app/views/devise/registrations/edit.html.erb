@@ -1,0 +1,67 @@
+<% set_page_title("Ваш профиль") %>
+<div class="row">
+  <div class="span4 sellerinfo"> <!-- Seller info -->
+    <h6>Продавец</h6>
+    <h5><%= current_user.nickname %></h5>
+
+    <p>
+      <small><%= current_user.email -%>
+        <br/>id: <strong><%= current_user.id -%></strong>
+      </small>
+    </p>
+    <p>на Азбукере с <%= l(current_user.created_at, :format => :cr_at) -%><br/>
+    </p>
+    <hr class="lot-separator"/>
+    <p>Всего объявлений: <strong><%= @user.lots.count  %></strong>
+      <br/>
+      Закрыто (продано книг): <strong><%= @user.lots.inactive.count  %></strong><br/>
+      Город: <strong><%= cities[current_user.cityid] %></strong>
+    </p>
+    <hr class="lot-separator"/>
+    <address>
+      <span class="label success">тел.</span>
+      <strong><%= current_user.phone -%></strong><br/>
+      <span class="label notice">skype</span> <strong>
+      <%= "<a href=\"skype:#{h(current_user.skypename)}?chat\">#{h(current_user.skypename)}</a>"
+          .html_safe -%></strong><br/>
+    </address>
+  </div>
+  <div class="span12">
+    <div class="row">
+      <div class="span6">
+        <h3>Редактирование профиля</h3>
+      </div>
+    </div>
+    <hr class="lot-separator"/>
+    <div class="row">
+      <%= flash_notice("span8 offset1 alert-message ").html_safe -%>
+
+      <div class="span12">
+        <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+                     :url => registration_path(resource_name),
+                     :html => {:method => :put}) do |f| %>
+            <fieldset>
+              <%= f.text_field :nickname, :class => "span5", :alt_text => "от 3 до 20 символов" %>
+              <%= f.text_field :phone, :class => "span5", :alt_text => "ваш полный номер телефона с кодом города" %>
+              <%= f.text_field :skypename, :class => "span5", :alt_text => "указывайте только если пользуетесь скайпом" -%>
+
+              <%= f.select :cityid, cities_rev, :class => "span5" %>
+            </fieldset>
+            <hr/>
+            <fieldset>
+              <%= f.text_field :password, :class => "span5",
+                               :label => "Новый пароль",
+                               :alt_text => "оставьте пустым, если не хотите менять" %>
+
+              <%= f.text_field :current_password, :class => "span5"  %>
+            </fieldset>
+            
+            <div class="actions">
+              <%= f.submit "Сохранить", :class => 'btn primary' %>
+              <%= link_to 'Отменить', show_user_path(current_user), :class => "btn" %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

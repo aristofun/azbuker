@@ -1,0 +1,19 @@
+<p>Добрый день.
+  <br/>Я Азбукер, рад что вы присоединились к нам.</p>
+
+<p>
+  Ваш логин: <strong><%= @resource.email %></strong><br/>
+  пароль: <strong><%= @resource.password %></strong>
+</p>
+
+<p>Прежде чем продать на Азбукере свою первую книгу, надо
+  подтвердить аккаунт по ссылке:</p>
+
+<p><%= link_to confirmation_url(@resource,
+                        :confirmation_token => @resource.confirmation_token),
+       confirmation_url(@resource,
+                        :confirmation_token => @resource.confirmation_token) %></p>
+
+<p>После подтверждения рекомендуется указать свой телефон и Skype. Иначе как с вами
+  свяжутся?</p>
+<%= render :partial => 'mail_footer' %>

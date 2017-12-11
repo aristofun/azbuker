@@ -1,0 +1,18 @@
+<% if @another_books.present? %>
+    <p class="right-book">
+      <small>Другие книги автора:</small>
+    </p>
+    <%= render :partial => 'lots/parts/another_book', :collection => @another_books %>
+
+    <p class="pull-right">
+      <strong>
+        <small><%= link_to 'Все объявления автора', author_path(@book.authors[0].id) -%>
+        </small>
+      </strong>
+    </p>
+<% else %>
+    <p class="pull-left">
+      <small>Других книг автора пока нет. Вы можете <%= link_to 'добавить', new_lot_path -%>
+      </small>
+    </p>
+<% end %>

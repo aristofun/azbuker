@@ -1,0 +1,46 @@
+<%
+   set_page_title("Азбукер: регистрация и вход")
+%>
+<%- if flash[:alert].present? %>
+    <div class="row">
+      <div class="span-one-third offset5 alert-message block-message error fade in" data-alert="alert">
+        <a class="close" href="#">×</a>
+
+        <p>
+          <%= flash[:alert] %>
+        </p>
+
+        <% content_for :alert_block, '<!-- -->'.html_safe %>
+        <div class="alert-actions">
+          <%- if user_signed_in? %>
+              <%= link_to "Выйти", destroy_user_session_path, :confirm => "Are you sure?",
+                          :class => "btn small",
+                          :method => :delete %>
+          <% else %>
+              <%= render 'devise/shared/forgetpass_link', :class_param => "btn small" %>
+              <%= render 'devise/shared/activatemail_link', :class_param => "btn small" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+<% end %>
+<br/>
+<div class="row">
+  <!-- registrations error -->
+  <div class="span-one-third offset1 well regbox">
+    <%= render :partial => 'devise/shared/regform' %>
+    <p>
+      <%= render :partial => 'devise/shared/activatemail_link' %>
+    </p>
+  </div>
+
+  <!-- login form -->
+  <div class="span-one-third offset2 well regbox">
+    <%= render :partial => 'devise/shared/loginform' %>
+
+    <p>
+      <%= render :partial => 'devise/shared/forgetpass_link' %>
+    </p>
+  </div>
+
+</div>

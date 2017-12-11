@@ -1,0 +1,16 @@
+<div class="span4" id="big_book">
+  <%= render 'lots/parts/big_lot_cover', :big_book => big_book %>
+  <h5 class="book-title"><%= big_book.title %></h5>
+  <h5 class="book-author">
+    <% if big_book.authors.length > 1 %>
+        <%= authors_list(big_book) %>
+    <% else %>
+        <%= link_to "#{big_book.authors[0].first} #{big_book.authors[0].last}",
+                    author_path(big_book.authors[0].id), :title => "Все его книги" %>
+    <% end %>
+  </h5>
+
+  <h3>от <%= big_book.min_price -%> р.
+    <small><%= plurize(big_book.lots_count, 'лотов', 'лот', 'лота') -%></small>
+  </h3>
+</div>

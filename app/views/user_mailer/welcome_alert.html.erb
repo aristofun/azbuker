@@ -1,0 +1,14 @@
+<p>Добрый день.
+  <br/>Теперь вы можете продать свои книги на Азбукере.</p>
+
+<p>
+  Ваш текущий nickname: <strong><%= @user.nickname %></strong><br/>
+</p>
+
+<p>Изменить его, а также указать контакты для связи с покупателями
+  можно по ссылке:</p>
+
+<p><%= link_to edit_registration_url(@user),
+               edit_registration_url(@user) %></p>
+<p>Если что – пишите.</p>
+<%= render :partial => 'devise/mailer/mail_footer' %>

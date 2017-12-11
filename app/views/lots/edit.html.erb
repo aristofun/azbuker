@@ -1,0 +1,16 @@
+<%  set_page_title("Правка объявления #{h(@lot.id)}") %>
+<div class="row">
+  <div class="span9">
+    <h2>Правка объявления
+    </h2>
+  </div>
+  <div class="span7">
+    <p class="pull-right rightrules">
+      <%= link_to 'Отменить правку', @lot %>
+      <%= link_to 'Мои лоты', show_user_path(current_user) %>
+    </p>
+  </div>
+</div>
+<hr class="headerline"/>
+<%= render 'lots/parts/form', :book_edit => true, :book_disabled => true %>
+<hr class="space"/>

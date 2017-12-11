@@ -1,0 +1,30 @@
+<%
+   set_page_title("#{genres[@genreid]} на Азбукере")
+%>
+<div class="row">
+  <div class="span9">
+    <h2><%= genres[@genreid]-%>
+      &nbsp;
+      <small><%= plurize(@books.total_entries, 'книг', 'книга', 'книги') -%></small>
+    </h2>
+  </div>
+  <div class="span3">
+    <%= city_chooser([:page, :cityid, :genreid], 'city-chooser') %>
+  </div>
+  <div class="span4">
+    <div class="pull-right dateprice-chooser">
+      <%= filter_link('по дате', 'date', true, true) -%> &nbsp;
+      <%= filter_link('по автору', 'author', false) -%> &nbsp;
+      <%= filter_link('по цене', 'price', false) -%> &nbsp;
+    </div>
+  </div>
+</div>
+<hr class="headerline"/>
+<!-- BIg books -->
+<%= render :partial => 'lots/parts/big_book4', :collection => @books.each_slice(4).to_a %>
+
+<div class="row">
+  <div class="span9 offset4">
+    <%= will_paginate(@books, :renderer => 'BootstrapPaginateRenderer') %>
+  </div>
+</div>

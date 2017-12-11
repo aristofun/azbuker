@@ -1,0 +1,17 @@
+<h4>Вход</h4>
+
+<%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+             :url => session_path(resource_name),
+             :html => {:class => "form-stacked login"}) do |f| %>
+
+    <%= f.email_field :email, :class => "span5" %>
+    <%= f.text_field :password, :class => "span5" %>
+
+    <% if devise_mapping.rememberable? -%>
+        <%= f.check_box :remember_me, :checked => true, :label_class => "empty-label",
+                        :alt_text => "запомнить на 2 недели" %>
+    <% end -%>
+    <br/>
+    <%= f.submit "Войти", :class => "btn large primary" %>
+<% end %>
+

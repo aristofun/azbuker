@@ -1,0 +1,21 @@
+<p>Вашей книгой интересуется человек с обратным адресом
+  <strong><a href="mailto:<%= @umsg.email -%>"><%= @umsg.email -%></a></strong></p>
+<%
+   lot = Lot.find(@umsg.lotid)
+%>
+<p>Книга: <%= link_to lot.book.title, lot_url(lot) %>
+</p>
+<p>
+  Вот что он спрашивает: <br/> - <br/>
+  <%= @umsg.text %><br/>
+  -
+</p>
+
+<p>Чтобы быстрее связываться с покупателями, укажите свой
+  телефон и Skype в
+  <%= link_to 'личном кабинете', edit_registration_url(@user) %>
+</p>
+
+<p>Если что – пишите.</p>
+
+<%= render :partial => 'devise/mailer/mail_footer' %>

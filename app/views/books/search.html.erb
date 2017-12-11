@@ -1,0 +1,49 @@
+<%
+   set_page_title("Поиск книг на Азбукере")
+%>
+
+<% if @books.present? %>
+    <div class="row">
+      <div class="span12">
+        <h3>Результаты поиска по запросу &laquo;<%= params[:q].to_s.squish -%>&raquo;</h3>
+      </div>
+      <div class="span4">
+        <%= city_chooser([:page, :cityid, :genreid], 'pull-right city-chooser') %>
+      </div>
+    </div>
+    <hr class="lot-separator"/>
+    <div class="row">
+      <%= render :partial => 'lots/parts/serp_books', :collection => @books.each_slice(4).to_a %>
+    </div>
+    <div class="row">
+      <div class="span9 offset4">
+        <%= will_paginate(@books, :renderer => 'BootstrapPaginateRenderer') %>
+      </div>
+    </div>
+<% else %>
+    <div class="row">
+      <div class="span16">
+        <h3>Никаких книг запросу &laquo;<%= params[:q].to_s.squish -%>&raquo; пока нет</h3>
+      </div>
+    </div>
+    <hr class="space"/>
+    <div class="row">
+      <div class="span10 offset2">
+        <%= form_tag(search_path, :method => :get, :class => '') do %>
+            <div class="clearfix">
+              <label for="q">Попробуйте иначе:</label>
+
+              <div class="input">
+                <%= text_field_tag :q, params[:q].squish, :placeholder => 'Поиск книги',
+                                   :class => 'span6' %>
+                <%= button_tag(:class => 'btn thin primary') do %>
+                    <strong>Найти</strong>
+                <% end %>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    </div>
+<% end %>
+
+

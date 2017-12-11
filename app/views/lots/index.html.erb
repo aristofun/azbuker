@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="span3">
+    <h5>Новые&nbsp;книги&nbsp;на&nbsp;Азбукере</h5>
+  </div>
+  <div class="span10">
+    <ul class="pills upright-corner-block up-nav">
+      <li><%= link_to "Деловая", genre_path(0) %></li>
+      <li><%= link_to "Учебная", genre_path(1) %></li>
+      <li><%= link_to "Проф.", genre_path(2) %></li>
+      <li><%= link_to "Художка", genre_path(3) %></li>
+      <li><%= link_to "Non-fiction", genre_path(4) %></li>
+      <li><%= link_to "Детская", genre_path(5) %></li>
+      <li><%= link_to "Раритеты", genre_path(6) %></li>
+      <li><%= link_to "Остальное", genre_path(-1) %></li>
+    </ul>
+  </div>
+  <div class="span3">
+    <%= city_chooser([:page, :cityid, :genreid], 'city-chooser') %>
+  </div>
+</div>
+<%
+   bookz = []
+   genrz = Globals::GENRES
+   genrz.each do |k, v|
+     books = Book.custom(:genre => k, :limit => 8, :city => cookies[:cityid])
+     bookz << books
+   end
+
+   bookz.sort_by! { |x| x[0].try(:updated_at).to_i }.reverse!
+
+   bookz.each do |books|
+%>
+    <% if books.present?
+         k = books[0].genre
+    %>
+        <div class="page-header">
+          <h3>
+            <%= link_to genrz[k], genre_path(k) -%>
+            <small>&nbsp; <%= plurize(books.total_entries, 'книг', 'книга', 'книги') %></small>
+          </h3>
+          <!--<a name="= anchor_"></a>-->
+        </div>
+        <!-- new row -->
+        <%= render :partial => 'lots/parts/big_book4', :collection => books.each_slice(4).to_a %>
+        <div class="row">
+          <div class="span16">
+            <h5 class="pull-right">
+              <%= link_to("Вся #{genrz[k].mb_chars.downcase} &rarr;".html_safe, genre_path(k)) %>
+              <a href="#"></a>
+            </h5>
+          </div>
+        </div>
+        <br/>
+    <% end %>
+<% end %>

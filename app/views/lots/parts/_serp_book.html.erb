@@ -1,0 +1,23 @@
+<div class="span4 serp-lot"> <!-- Seller info -->
+  <div class="pull-left serp-lot-image">
+    <%= link_to(
+                image_tag(
+                        serp_book.get_cover(:x120), :class => "book-cover120 book-cover100",
+                        :alt => "Книга #{serp_book.title}"),
+                book_path(serp_book.id)) %>
+  </div>
+  <div class="pull-right serp-lot-text">
+    <p><strong>
+      <%= link_to(serp_book.title,
+                  book_path(serp_book.id)) %>
+    </strong></p>
+
+    <p>
+      <%= link_to(authors_list(serp_book), book_path(serp_book.id)) %>
+    </p>
+    <h5 class="smallot">от <%= serp_book.min_price %> р.</h5>
+    <p>
+      <small><strong><%=  plurize(serp_book.lots_count, 'лотов', 'лот', 'лота') %></strong></small>
+    </p>
+  </div>
+</div>

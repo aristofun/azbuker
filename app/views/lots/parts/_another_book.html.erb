@@ -1,0 +1,13 @@
+<!-- right book -->
+<p class="right-book">
+  <%= link_to(
+              image_tag(
+                      another_book.get_cover(:x120), :class => "book-cover120",
+                      :alt => "Книга #{another_book.title}"),
+              book_path(another_book.id)) %>
+</p>
+<p class="right-book" id='another_book'>
+  <%= another_book.title %>
+  <br/><strong>от <%= another_book.min_price %> р.</strong>
+  <%= link_to 'смотреть &rarr;'.html_safe, book_path(another_book.id) -%>
+</p><br/>

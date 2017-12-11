@@ -1,0 +1,225 @@
+.msgStatus {
+    font-size: 18px;
+    margin-left: 28px;
+    padding-bottom: 10px;
+    padding-left: 42px;
+    padding-top: 4px;
+    color: #808080;
+    line-height: 50px;
+}
+
+.msgFailIco {
+    background: url("/img/ico/fail_icon.png") no-repeat scroll 0 0 transparent;
+}
+
+.msgSuccessIco {
+    background: url("/img/ico/success_icon.png") no-repeat scroll 0 0 transparent;
+}
+
+.btnSendMsg {
+    background: url("/img/ico/vaga/mail.png") no-repeat scroll 0 0 transparent;
+}
+
+.btnAbuse {
+    background: url("/img/ico/vaga/error.png") no-repeat scroll 0 0 transparent;
+    opacity: 0.45;
+    filter: alpha(Opacity = 45);
+}
+
+.btnAbuse:hover {
+    opacity: 1;
+    filter: alpha(Opacity = 100);
+}
+
+.btnTwitter {
+    background: url("../img/ico/ico_twitter_mini.png") no-repeat scroll 0 0 transparent;
+}
+
+.btnFb {
+    background: url("../img/ico/ico_facebook_mini.png") no-repeat scroll 0 0 transparent;
+}
+
+.btnMini {
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+    padding-left: 20px;
+    padding-bottom: 5px;
+}
+
+.city-chooser {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+.book-cover200 {
+    max-height: 200px;
+    max-width: 200px;
+}
+
+.book-cover300 {
+    max-width: 200px;
+    max-height: 300px;
+}
+
+.book-cover120:hover {
+    border-color: #0069d6;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+    -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+    box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+}
+
+.book-cover120 {
+    border: 1px solid #c6c6c6;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 0px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    max-width: 120px;
+    max-height: 120px;
+}
+
+.book-cover100 {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+p.rightrules {
+    line-height: 36px;
+    margin-bottom: 0;
+}
+
+p.right-book {
+    font-size: 11px;
+    padding-left: 26px;
+}
+
+.dateprice-chooser {
+    margin-top: 8px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.book-author {
+    /*margin-top: 8px;*/
+    font-weight: normal;
+}
+.book-title {
+    line-height: normal;
+    /*font-size: 14px;*/
+    /*font-weight: normal;*/
+    margin-top: 8px;
+}
+
+hr.space {
+    width: 0;
+    clear: both;
+}
+
+hr.lot-separator {
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+hr.headerline {
+    margin-top: 0;
+}
+
+h4.midlot {
+    margin-top: 0px;
+    padding-top: 0;
+    line-height: 20px;
+}
+
+h5.smallot {
+    line-height: 24px;
+}
+
+div.lotinbook {
+    margin-bottom: 18px;
+    border-top: #eee solid 1px;
+}
+
+.regbox > h4 {
+    padding-bottom: 10px;
+}
+
+div.sellerinfo {
+    position: static;
+    overflow: visible;
+    z-index: 10000;
+}
+
+div.suggestline {
+    /*background-color: #f9f9ff;*/
+    min-width: 940px;
+    padding-top: 18px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: -10px;
+
+    text-shadow: 1px 1px 0 #fff;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px 4px 4px 4px;
+    -webkit-box-shadow: inset 0 5px 15px rgba(0, 0, 0, .065);
+    -moz-box-shadow: inset 0 5px 15px rgba(0, 0, 0, .065);
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, .065);
+}
+
+div.regbox {
+    /*border: 1px solid #a0a0a0;*/
+    /*border-radius: 4px 4px 4px 4px;*/
+    padding: 10px 10px 4px 20px;
+    width: 290px;
+}
+
+div.small-lot-text p {
+    font-size: 11px;
+}
+
+div.small-lot-text {
+    width: 93px;
+    word-wrap: break-word;
+    /*padding-right: 2px;*/
+}
+
+div.serp-lot-text p {
+    font-size: 12px;
+}
+
+div.serp-lot {
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+div.serp-lot-text {
+    width: 108px;
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+div.middle-lot-text {
+    width: 200px;
+    /*padding-right: 2px;*/
+}
+
+div.middle-lot-image {
+    width: 120px;
+}
+
+div.serp-lot-image {
+    width: 100px;
+}
+
+label.empty-label {
+    display: none;
+}
+
+div.field_with_errors {
+    display: inline;
+}

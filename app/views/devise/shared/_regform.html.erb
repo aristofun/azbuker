@@ -1,0 +1,17 @@
+<h4>Регистрация</h4>
+
+<%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+             :url => registration_path(resource_name),
+             :html => {:class => "form-stacked register"}) do |f| %>
+    <%= f.email_field :email, :class => "span5", :alt_text => "для активации аккаунта и связи с покупателями, <br/><strong>нигде</strong> не публикуется".html_safe %>
+    <%= f.text_field :password, :class => "span5", :alt_text => 'не менее 5 символов' %>
+
+    <%= f.check_box :agreement,
+                    :label_class => "empty-label",
+                    :alt_text => "я согласен с <a href=\"/page/terms.html\"
+                    target=\"_blank\">правилами
+                    сервиса</a>".html_safe    %>
+    <br/>
+
+    <%= f.submit "Готово", :class => "btn large success" %>
+<% end %>

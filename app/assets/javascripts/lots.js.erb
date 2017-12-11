@@ -1,0 +1,45 @@
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.
+
+
+$(document).ready(
+        function () {
+            $(document).ready(function() {
+                $(".fancybox").fancybox();
+            });
+
+            $("form").each(function () {
+                var $that = $(this);
+                $that.submit(function () {
+                    $that.find("input[type='image'],input[type='submit']").attr("disabled", "true");
+                });
+            });
+
+            //  Send letter forms
+            $("div#captcha_div").appendTo('div#msg_block');
+            $("div#abuse_form").hide();
+//            $("div#msg_form").hide();
+
+
+            <% [['msg', 'abuse'], ['abuse', 'msg']].each do |t| %>
+
+            $('#<%= t[0] %>_btn').click(
+                    function () {
+                        $("div#<%= t[1] %>_form").hide();
+
+                        $("div#<%= t[0] %>_form").show(0,
+                                function () {
+                                    if ($("div#<%= t[0] %>_form").is(':visible')) {
+                                        $(window).scrollTop($("input#<%= t[0] %>_input").offset().top - 150);
+                                        $("input#<%= t[0] %>_input").focus();
+
+                                        // move captcha div
+                                        $('div#captcha_div').appendTo('div#<%= t[0] %>_block')
+                                    } else {
+                                        $(window).scrollTop(0);
+                                    }
+                                });
+                        return false;
+                    });
+            <% end %>
+        });

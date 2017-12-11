@@ -1,0 +1,42 @@
+<!-- LOT element -->
+<div class="row">
+  <% lot_pair.each do |lot| %>
+      <div class="span6">
+        <div class="pull-left middle-lot-image">
+          <%= link_to(
+                      image_tag(
+                              lot.get_cover(:x120), :class => "book-cover120",
+                              :alt => "Книга #{lot.book.title}"),
+                      lot_path(lot)) %>
+        </div>
+
+        <div class="pull-right middle-lot-text">
+          <% if owner_or_admin?(lot) %>
+              <%= link_to 'править', edit_lot_path(lot), :class => 'label success' %>
+              <%= link_to 'закрыть', close_lot_path(lot), :confirm => t('messages.confirmation'),
+                          :class => 'label important', :target => :blank, :method => :put %>
+          <% end %>
+
+          <h4 class="midlot"><%= lot.book.title -%></h4>
+          <%= authors_list(lot.book) -%>
+          <br/>
+          <h5 class="smallot"><%= lot.price -%> р.</h5>
+
+          <p>
+            <small><strong><%= lot.cityname %></strong></small>
+            <br/>
+            <%= delivery_types_string(lot) %>
+          </p>
+          <p>
+            <%= "<small><strong>тел.:</strong></small> #{h(lot.phone)} <br/>".html_safe if lot.phone.present? -%>
+            <%= "<small><strong>skype:</strong></small> #{link_to lot.skypename, "skype:#{lot.skypename}?chat"}".html_safe if lot.skypename.present? -%>
+          </p>
+
+          <p>
+            <small><%= l(lot.created_at, :format => :long) -%></small>
+          </p>
+        </div>
+      </div>
+  <% end %>
+</div>
+<hr class="lot-separator"/>

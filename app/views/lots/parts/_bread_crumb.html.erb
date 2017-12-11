@@ -1,0 +1,26 @@
+<%
+   lot ||= nil
+   book = lot.book if (book.nil? && lot.present?)
+%>
+<div class="row">
+  <div class="span16">
+    <ul class="breadcrumb">
+      <li><%= link_to 'Все книги', root_path %> <span class="divider">/</span></li>
+      <% if book.present? %>
+          <li><%= link_to genres[book.genre], genre_path(book.genre) -%>
+            <span class="divider">/</span>
+          </li>
+          <li class="<%= lot.present? ? '' : 'active' -%>">
+            <%= link_to truncate(book.title, :length => 77,
+                                 :separator => ' ',
+                                 :omission => ' ...'),
+                        book_path(book.id) -%>
+            <span class="divider">/</span>
+          </li>
+      <% end %>
+      <% if lot.present? %>
+          <li class="active"> Объявление #<strong><%= lot.id -%></strong></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

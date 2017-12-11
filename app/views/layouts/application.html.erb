@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="<%= I18n.locale -%>"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+  <meta charset="utf-8"/>
+  <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+  <title><%= page_title -%></title>
+  <meta name="description" content="<%= page_description -%>"/>
+
+  <%= meta_tags %>
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!-- Le styles -->
+  <%= stylesheet_link_tag "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+
+  <!-- Le fav and touch icons -->
+  <link rel="shortcut icon" type="image/x-icon" href="http://azbuker.ru/favicon.ico">
+  <link rel="icon" type="image/png" href="http://azbuker.ru/favicon.png">
+  <link rel="apple-touch-icon" href="/ico/azbuker-apple-57x57.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/ico/azbuker-apple-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/ico/azbuker-apple-114x114.png">
+
+  <!-- Put this script tag to the <head> of your page -->
+  <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?52"></script>
+
+  <script type="text/javascript">
+    VK.init({apiId: 3059785, onlyWidgets: true});
+  </script>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33746756-1']);
+    _gaq.push(['_setDomainName', 'azbuker.ru']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+      var ga = document.createElement('script');
+      ga.type = 'text/javascript';
+      ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+
+<body style="padding-top: 65px;">
+<!-- Topbar ============================================== -->
+<div class="topbar" data-dropdown="dropdown" data-scrollspy="scrollspy">
+  <div class="topbar-inner">
+    <div class="container">
+      <h3 style="margin-left: 0px;"><a href="/">Азбукер</a></h3>
+
+      <%= form_tag(search_path, :method => :get, :class => 'pull-left') do %>
+          <%= text_field_tag :q, params[:q].to_s.squish, :placeholder => 'Поиск книги',
+                             :class => 'span5' %>
+          <%= button_tag(:class => 'btn small thin primary') do %>
+              <strong>Найти</strong>
+          <% end %>
+      <% end %>
+      <ul class="nav offset80">
+        <li></li>
+        <li><%= link_to 'Как это работает?', pages_path('howitworks', :html) -%></li>
+      </ul>
+      <ul class="nav secondary-nav">
+        <li><%= link_to 'Продать книгу!', new_lot_path, :class => "btn small thin-sell error"
+        %></li>
+        <% if user_signed_in? %>
+            <li class="dropdown">
+              <a href="<%= show_user_path(current_user) -%>" class="dropdown-toggle"
+                 data-toggle="dropdown"><%= current_user.nickname -%>  </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Продать книгу", new_lot_path %></li>
+                <li><%= link_to "Мои&nbsp;лоты&nbsp;(#{current_user.lots.count})".html_safe,
+                                show_user_path(current_user) %></li>
+                <li><%= link_to "Мой&nbsp;профиль".html_safe,
+                                show_user_path(current_user) %></li>
+                <li class="divider"></li>
+                <li><%= link_to 'Выйти', destroy_user_session_path, :method => :delete %></li>
+              </ul>
+            </li>
+        <% else %>
+            <li><%= link_to 'Войти', rega_path %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /topbar-inner -->
+</div>
+<div class="container">
+  <% if content_for?(:alert_block) %>
+      <%= yield :alert_block %>
+  <% else %>
+      <% msg = flash_notice.html_safe %>
+      <% if msg.present? %>
+          <!-- flash row -->
+          <div class="row"><%= msg %></div>
+      <% end %>
+  <% end %>
+  <%= yield %>
+  <hr/>
+  <div class="row small-text">
+    <div class="span4">
+      Сделано <%= link_to '«Хорошим программистом»', 'http://goodprogrammer.ru' -%>
+    </div>
+
+    <div class="span4">
+      <%= link_to 'Правила', pages_path('terms', :html) -%>,
+      <%= link_to 'Зачем это надо?', pages_path('why', :html) -%>
+    </div>
+
+    <div class="span5">
+      <strong>
+        <!-- Begin Email Cloaking -->
+        <script language='javascript' type='text/javascript'><!--
+        x = '&#64;';
+        eml = '&#104;&#101;&#108;&#112;' + x + '&#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;';
+        msg = '&#104;&#101;&#108;&#112;' + x + '&#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;';
+        out = '<a class="cloak_eml" href="mailto:' + eml + '">' + msg + '</a>';
+        document.write(out);
+        // -->
+        </script>
+        <noscript>
+          <!-- This message is displayed if the browser has javascript disabled. -->
+          [ &#104;&#101;&#108;&#112; (at) &#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;
+          ]
+        </noscript>
+      </strong>
+      <!-- End Email Cloaking -->
+    </div>
+    <div class="span3">
+      <p class="pull-right">&copy; 2012 &mdash; &infin; &laquo;Азбукер&raquo; v. 2.7 (20171206)</p>
+      <p>
+        <!--<%= RUBY_VERSION %>-->
+      </p>
+    </div>
+  </div>
+  <hr class="space"/>
+</div>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+  (function (d, w, c) {
+    (w[c] = w[c] || []).push(function () {
+      try {
+        w.yaCounter16150570 = new Ya.Metrika({
+          id: 16150570,
+          clickmap: true,
+          trackLinks: true,
+          accurateTrackBounce: true
+        });
+      } catch (e) {
+      }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () {
+          n.parentNode.insertBefore(s, n);
+        };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+      d.addEventListener("DOMContentLoaded", f, false);
+    } else {
+      f();
+    }
+  })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript>
+  <div><img src="//mc.yandex.ru/watch/16150570" style="position:absolute; left:-9999px;" alt=""/>
+  </div>
+</noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!--#ru_debug(params) if Rails.env.development?-->
+<!--#ru_debug(flash) if Rails.env.development?-->
+
+<script type="text/javascript">
+  var reformalOptions = {
+    project_id: 69015,
+    project_host: "azbuker.reformal.ru",
+    tab_orientation: "left",
+    tab_indent: "50%",
+    tab_bg_color: "#107329",
+    tab_border_color: "#FFFFFF",
+    tab_image_url: "http://tab.reformal.ru/0LLQsNGI0Lgg0L7RgtC30YvQstGL/FFFFFF/078f8e2d4c15add71088566093f1cf9c/left/0/tab.png",
+    tab_border_width: 1
+  };
+
+  (function () {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'media.reformal.ru/widgets/v3/reformal.js';
+    document.getElementsByTagName('head')[0].appendChild(script);
+  })();
+</script>
+<noscript>
+  <a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png"/></a><a href="http://azbuker.reformal.ru">ваши
+  отзывы</a></noscript>
+
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=257161747727357";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</body>
+</html>

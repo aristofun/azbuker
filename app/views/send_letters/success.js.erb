@@ -1,0 +1,18 @@
+$("div#sendbtns_row").remove();
+$("div#abuse_form").remove();
+
+$("div#msg_form").replaceWith("<%=
+j %(
+<div class="span9 sendmsg"
+data-alert="alert">
+<br/>
+            <span class='msgStatus #{@status_ok ? 'msgSuccessIco\'> Сообщение успешно отправлено'
+            : 'msgFailIco\'>Сообщение не отправлено, попробуйте позже' }</span>
+       <br/>
+       <br/>
+</div>
+).html_safe %>");
+
+$("div#msg_form").show();
+
+

@@ -1,0 +1,61 @@
+<!--  BEGIN AUTO SUGGESTER  -->
+<div id='suggest_form'>
+  <% if books.present? %>
+      <h5>Может быть одна из этих книг? Обложка может и не совпадать.
+      </h5>
+
+      <div class="suggestline">
+        <% books.each_slice(4) do |bukz4| %>
+            <div class="row">
+              <% bukz4.each do |book|
+
+                opts = {
+                        :d_src => book.get_cover(:x200),
+                        :d_title => book.title,
+                        :d_authors => book.authors_list,
+                        :d_bookid => book.id,
+                        :d_ozonid => book.ozonid,
+                        :d_ozon_coverid => book.ozon_coverid,
+                        :d_genre => book.genre}
+
+                opts[:d_ozon_flag] = book.id if book.is_a? OzBook
+              %>
+                  <div class="span4">
+                    <div class="pull-left middle-lot-image">
+                      <p>
+                        <%= link_to(
+                                    image_tag(book.get_cover(:x120), :class => 'book-cover120'),
+                                    '#', opts.merge(:class => 'suggest_btn')) %>
+                      </p>
+
+                      <!--<p style="margin-left: 30px">-->
+                      <!--<strong>-->
+                      <%=
+                          #    link_to("Эта!", '#', opts.merge(:class => 'btn info suggest_btn'))
+                      %>
+                      <!--</strong>-->
+                      <!--</p>-->
+                    </div>
+                    <div class="pull-right small-lot-text">
+                      <p>
+                        <strong><%= truncate(book.title, :length => 40, :separator => ' ') -%></strong>
+                      </p>
+
+                      <p><Em><%= book.authors_list %></Em></p>
+
+                      <p>
+                        <small><strong><%= genres[book.genre] -%></strong></small>
+                        <br/>
+                      </p>
+                    </div>
+                  </div>
+              <% end %>
+            </div>
+            <br/>
+        <% end %>
+      </div>
+      <br/>
+      <br/>
+      <!--  END AUTO SUGGESTER  -->
+  <% end %>
+</div>

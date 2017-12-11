@@ -1,0 +1,21 @@
+<% if @similar_lots.present? %>
+    <p class="right-book">
+      <small>Эта же книга у других продавцов:</small>
+    </p>
+
+    <%= render :partial => 'lots/parts/similar_lot', :collection => @similar_lots %>
+
+    <p class="pull-right">
+      <strong>
+        <small><%= link_to 'Все объявления', book_path(@lot.book_id) -%>
+          (<%= @lot.book.lots.in_city(@lot.cityid).count -%>)
+        </small>
+      </strong>
+    </p>
+<% else %>
+    <p class="pull-left">
+      <small>Других объявлений про книгу в этом городе нет.
+        <%= link_to "Создайте свое!", new_lot_path %>
+      </small>
+    </p>
+<% end %>

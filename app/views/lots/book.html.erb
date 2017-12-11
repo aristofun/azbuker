@@ -1,0 +1,92 @@
+<%
+   # we have @book, @another_books, @lots + params: city filter, price&date order
+   set_page_title("#{@book.title}, #{@book.authors_list} – купить книгу на Азбукере")
+
+   set_meta_tags(
+           {
+                   'og:title' => "#{@book.title}, #{@book.authors_list}",
+                   'og:image' => @book.get_cover(:x300),
+                   'og:site_name' => 'Azbuker.ru',
+                   'og:description' => "Цена от #{@book.min_price} рублей, всего #{plurize(@book.lots_count, 'объявлений', 'объявление', 'объявления')}"
+           }
+   )
+%>
+
+<% cache_unless_admin("#{params.merge(:cityid => cookies[:cityid]).except("utf8")}/#{@book.cache_key}",
+                      :expires_in => 30.minutes) do %>
+    <%= render :partial => 'lots/parts/bread_crumb', :locals => {:book => @book} %>
+
+    <div class="row">
+      <div class="span4"> <!-- book cover & stuff -->
+        <% if admin? %>
+            <p><%= link_to 'Админка', odminko_book_path(@book), :class => 'btn small danger' -%></p>
+        <% end %>
+
+        <%= render 'lots/parts/big_lot_cover', :big_book => @book, :show_lightbox => true %>
+
+        <%= render :partial => 'lots/parts/share_buttons_left' %>
+      </div>
+      <div class="span9">
+        <div class="row">
+          <div class="span9">
+            <h1><%= @book.title -%></h1>
+
+            <%= content_tag(:h3) do %>
+                <%= authors_list(@book) %>
+            <% end %>
+
+            <h2>от <%= @book.min_price -%> р.
+              <small><%= plurize(@lots.total_entries, 'лотов', 'лот', 'лота') -%></small>
+            </h2>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="span9">
+            <p>
+              <small>
+                <%= link_to 'Продать эту книгу на Азбукере',
+                            new_lot_path(:bookid => @book.id),
+                            :class => '' -%>
+              </small>
+            </p>
+
+            <%= render :partial => 'lots/parts/ozon_partner_link', :locals => {:book => @book} %>
+
+          </div>
+        </div>
+
+        <br/>
+
+        <div class="row">
+          <div class="span5">
+            <%= city_chooser([:page, :cityid]) %>
+          </div>
+
+          <div class="span4">
+            <div class="pull-right dateprice-chooser">
+              <%= filter_link('по дате', 'date', true, true) -%> &nbsp;
+              <%= filter_link('по цене', 'price', false) -%> &nbsp;
+            </div>
+          </div>
+        </div>
+<% end %>
+<!-- LOT element -->
+<% if @lots.present? %>
+    <%= render :partial => 'lots/parts/micro_lot', :collection => @lots -%>
+<% else %>
+    <p><h6><em>В этом городе такую книгу пока никто не продает</em></h6></p>
+    <p><em>Вы можете стать первым</em></p>
+<% end %>
+<div class="row">
+  <div class="span8 offset2">
+    <%= will_paginate(@lots, :renderer => 'BootstrapPaginateRenderer') %>
+  </div>
+</div>
+</div>
+
+<div class="span3">
+  <%= render 'lots/parts/another_books' %>
+</div>
+</div>

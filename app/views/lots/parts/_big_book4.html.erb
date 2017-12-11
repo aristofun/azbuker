@@ -1,0 +1,12 @@
+<div class="row">
+  <% if big_book4.present? %>
+      <!-- new row -->
+      <%= render :partial => 'lots/parts/big_book', :collection => big_book4 %>
+  <% else %>
+  <div class="span6 offset5">
+    <h2>Книг этого автора в данный момент на Азбукере нет</h2>
+    Посмотрите других авторов или приходите через несколько дней.
+  </div>
+  <% end %>
+</div>
+<hr class="space"/>

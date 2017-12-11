@@ -1,0 +1,43 @@
+<!-- LOT element -->
+<hr class="lot-separator"/>
+<div class="row" id="micro_lot">
+  <div class="span3">
+    <h5 class="smallot">
+      <small>Цена:</small>
+      <%= micro_lot.price -%> р.
+    </h5>
+    <h5 class="smallot">
+      <small>Где:</small>
+      <%= cities[micro_lot.cityid] -%>
+    </h5>
+    <p>
+      <small><%= link_to 'подробнее', lot_path(micro_lot), :class => 'label success' -%></small>
+    </p>
+  </div>
+  <div class="span3">
+    <noindex>
+      <p class="smallot">
+        <%= "<small>тел.:</small> #{h(micro_lot.phone)} ".html_safe if micro_lot.phone.present? -%>
+      </p>
+      <p class="smallot">
+        <%= "<small>Skype:</small> #{link_to micro_lot.skypename,
+                                             "skype:#{micro_lot.skypename}?chat"}".html_safe if micro_lot.skypename.present? -%>
+      </p>
+    </noindex>
+  </div>
+  <div class="span3">
+    <p class="pull-right"><%= l(micro_lot.created_at, :format => :cr_at) -%>,
+      <strong><%= l(micro_lot.created_at, :format => :clock) -%></strong></p>
+
+    <p class="pull-right">
+      <% if micro_lot.can_deliver %>
+          <small><em>есть доставка по городу</em></small>
+          <br/>
+      <% end %>
+      <% if micro_lot.can_postmail %>
+          <small><em>есть доставка по почте</em></small>
+      <% end %>
+    </p>
+  </div>
+</div>
+

@@ -1,0 +1,169 @@
+<%
+   if myself?
+     content_for(:title, "Мои книги на Азбукере")
+     set_meta_tags(
+             {
+                     'og:title' => "Мои книги на Азбукере",
+                     'og:site_name' => 'Azbuker.ru',
+                     'og:description' => "Распродаю интересные книги – заходите, смотрите"
+             }
+     )
+   else
+     set_page_title("Книги пользователя #{h(@user.nickname)} на Азбукере")
+   end
+
+%>
+
+<div class="row">
+  <div class="span4 sellerinfo"> <!-- Seller info -->
+    <h6>Продавец</h6>
+    <h5><%= @user.nickname %></h5>
+
+    <p>на Азбукере с <%= l(@user.created_at, :format => :cr_at) -%><br/>
+    </p>
+    <hr class="lot-separator"/>
+    <p>Всего объявлений: <strong><%= @user.lots.count %></strong>
+      <br/>
+      Закрыто (продано книг): <strong><%= @user.lots.inactive.count %></strong><br/>
+      Город: <strong><%= cities[@user.cityid] %></strong>
+    </p>
+    <hr class="lot-separator"/>
+    <noindex>
+      <address>
+        <span class="label success">тел.</span>
+        <strong><%= @user.phone -%></strong><br/>
+        <span class="label notice">skype</span> <strong>
+        <%= link_to @user.skypename, "skype:#{@user.skypename}?chat" if @user.skypename.present? -%>
+      </strong><br/>
+      </address>
+    </noindex>
+    <p>
+      <small>
+        id: <strong><%= @user.id -%></strong>
+        <% if myself_or_admin? %>
+            <br/>
+            email: <strong><%= @user.email -%> </strong>
+        <% end %>
+      </small>
+    </p>
+
+    <%= render :partial => 'lots/parts/share_buttons_left' %>
+
+    <% if myself? %>
+        <p>
+          <%= link_to "Редактировать профиль", edit_user_registration_path,
+                      :class => 'btn info' %>
+        </p>
+        <p>
+          <%= link_to "Выйти", destroy_user_session_path,   :method => :delete,
+                      :confirm => t('messages.confirmation'),
+                      :class => 'btn error' %>
+        </p>
+    <% end %>
+    <% if admin? %>
+        <p>
+          <br/>
+          <%= link_to "В админке", edit_odminko_user_path(@user),
+                      :class => 'btn error' %>
+        </p>
+    <% end %>
+  </div>
+  <div class="span12">
+    <% content_for :alert_block, '<!-- -->'.html_safe %>
+    <%= flash_notice(cssclass = 'alert-message').html_safe %>
+    <% if myself? %>
+        <div class="row">
+          <div class="span12">
+            <p>
+              <strong>Обязательно расскажите френдам о ваших книгах:
+              </strong>
+
+
+              <!-- AddThis Button BEGIN -->
+
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+              <a class="addthis_button_facebook"></a>
+              <a class="addthis_button_vk"></a>
+              <a class="addthis_button_twitter"></a>
+              <a class="addthis_button_livejournal"></a>
+              <a class="addthis_button_odnoklassniki_ru"></a>
+              <a class="addthis_button_email"></a>
+              <a class="addthis_button_gmail"></a>
+              <a class="addthis_button_compact"></a>
+              <a class="addthis_counter addthis_bubble_style"></a>
+            </div>
+            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=aristofun"></script>
+            <!-- AddThis Button END -->
+            </p>
+          </div>
+        </div>
+        <hr class="lot-separator"/>
+    <% end %>
+    <div class="row">
+      <div class="span6">
+        <h3>
+          <% if myself? %>
+              Мои объявления
+          <% else %>
+              Объявления продавца
+          <% end %>
+        </h3>
+      </div>
+      <div class="span6">
+        <ul class="pills pull-right upright-corner-block">
+          <%= render('lots/parts/open_closed_pills',
+                     :active_count => @user.lots.active.count,
+                     :inactive_count => @user.lots.inactive.count) if myself_or_admin?
+          %>
+        </ul>
+      </div>
+    </div>
+    <hr class="lot-separator"/>
+    <div class="row">
+      <% if @lots.blank? %>
+          <hr class="space"/>
+          <div class="span7 offset2">
+            <p>
+              <% if myself? %>
+                <h4>У вас нет ни одного объявления. <%= link_to 'Создайте!', new_lot_path %></h4>
+                Избавьтесь от старых книг, спасите планету
+            <% else %>
+                <h4>У этого пользователя нет ни одного объявления</h4>
+            <% end %>
+            </p>
+          </div>
+      <% else %>
+
+          <div class="span7">
+            <form method='get' id='genre_filter_form'>
+              <%= params2hidden_form([:page, :genre]) %>
+              <%= select_tag :genre,
+                             "<option selected='selected' value='' class='option_stub'>все  жанры</option>".html_safe +
+                                     options_for_select(genres_rev, params[:genre]),
+                             :include_blank => false,
+                             :class => "span4", :onchange => "this.form.submit();"
+              %>
+            </form>
+          </div>
+          <div class="span5">
+            <div class="pull-right dateprice-chooser">
+              <%= filter_link('по дате', 'date', true, true) -%> &nbsp;
+              <%= filter_link('по цене', 'price', false) -%> &nbsp;
+              <%= filter_link('по автору', 'author', false) -%>
+            </div>
+          </div>
+      <% end %>
+    </div>
+    <br/>
+    <!-- User lots -->
+    <%= render :partial => 'lots/parts/lot_pair', :collection => @lots.each_slice(2).to_a %>
+
+    <!-- Paginator -->
+    <div class="row">
+      <div class="span8 offset3">
+        <%= will_paginate(@lots, :renderer => 'BootstrapPaginateRenderer') %>
+      </div>
+    </div>
+    <br/>
+  </div>
+</div>

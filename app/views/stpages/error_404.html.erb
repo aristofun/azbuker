@@ -1,0 +1,31 @@
+<%
+    set_page_title('404, страница не найдена')
+%>
+<p>
+<h1>404</h1>
+  <h3>
+    Путь, который вы искали не найден. Вы ошиблись или этой страницы больше не существует.
+  </h3>
+</p>
+<p>
+    Напишите нам, если эта ошибка будет повторяться.
+  <!-- Begin Email Cloaking -->
+        <script language='javascript' type='text/javascript'><!--
+        x = '&#64;';
+        eml = '&#104;&#101;&#108;&#112;' + x + '&#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;';
+        msg = '&#104;&#101;&#108;&#112;' + x + '&#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;';
+        out = '<a class="cloak_eml" href="mailto:' + eml + '">' + msg + '</a>';
+        document.write(out);
+        // -->
+        </script>
+        <noscript>
+          <!-- This message is displayed if the browser has javascript disabled. -->
+          [ &#104;&#101;&#108;&#112; (at) &#97;&#122;&#98;&#117;&#107;&#101;&#114;&#46;&#114;&#117;
+          ]
+        </noscript>
+</p>
+<p>
+  <br/>
+  <small>Вот в чем проблема: <em><%= params[:not_found] %></em></small>
+</p>
+<hr class="space"/>

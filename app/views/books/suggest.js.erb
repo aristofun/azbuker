@@ -1,0 +1,2 @@
+$("div#suggest_form").replaceWith("<%= j(render 'lots/parts/book_suggest', :books => @books) %>");
+$('a.suggest_btn').click(suggest_replace_fileinput);

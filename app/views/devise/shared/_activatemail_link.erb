@@ -1,0 +1,7 @@
+<%-
+    class_param ||= ""
+
+    if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <%= link_to "Не получили ссылку на активацию?", new_confirmation_path(resource_name),
+                :class => class_param %>
+<% end -%>

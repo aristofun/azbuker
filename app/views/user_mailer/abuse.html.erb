@@ -1,0 +1,24 @@
+<p>Поступила жалоба на пользователя
+  <strong><%= link_to @user.nickname, show_user_url(@user) %></strong> (<%= @user.email %>)
+  <br/>
+  На объявление #<%= link_to @umsg.lotid, lot_url(@umsg.lotid) %>
+  <br/>От юзера <%= @umsg.email %>
+</p>
+
+<p>
+  Суть жалобы: <strong><%= Globals::ABUSES[@umsg.type.to_i] %></strong>
+  <br/>-
+  <br/>
+  <%= @umsg.text %>
+</p>
+
+<p>Внимательно
+  <%= link_to 'прочитайте правила', pages_url('terms', :html) %>,
+  <%= link_to 'FAQ', pages_url('faq', :html) %>.
+  И исправьте пожалуйста все нарушения.
+</p>
+
+<p>Иначе нам придется вас забанить :(, если жалоба необоснована – напишите нам пожалуйста об
+  этом как можно скорее.</p>
+
+<%= render :partial => 'devise/mailer/mail_footer' %>

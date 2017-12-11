@@ -1,0 +1,114 @@
+<%
+   book_edit ||= false
+   book_disabled ||= false
+%>
+<%= form_for(@lot, :html => {:class => "form-stacked form-lot"}, :builder => BootstrapFormBuilder) do |f| %>
+    <div class="row" id="lot_form">
+      <div class="span7">
+        <%= f.text_field :book_title, :class => "span7", :size => 30,
+                         :placeholder => "Как написано на книге, без кавычек и лишних символов",
+                         :disabled => book_disabled %>
+        <%
+           alt_text = %{
+                        В формате <em><strong>А. С. Пушкин</strong></em>,
+                        <em><strong>Александр Пушкин</strong></em>,
+                        <em><strong>А.
+                          Пушкин</strong></em> или просто <em><strong>Пушкин</strong></em>.
+                        Если авторов несколько, укажите их через запятую. Если их много, добавьте
+                        <strong>&laquo;и др.&raquo;</strong>.
+                    }.html_safe
+           alt_text = "Менять книгу нельзя. Чтобы продать другую книгу – #{link_to 'создайте
+           новый лот', new_lot_path}".html_safe if book_edit
+        %>
+        <%= f.text_field :book_authors, :class => "span7", :size => 30, :disabled => book_disabled,
+                         :alt_text => alt_text
+        %>
+
+        <p>
+          <a href="#" class="btn small error" id="reset_book_btn"
+             style="<%= 'display:none;' if (@lot.bookid.blank? || book_edit) %>">
+            Другая книга</a>
+        </p>
+        <br/>
+      </div>
+
+      <div class="span4">
+        <%= f.select :book_genre, genres_rev, {:include_blank => true}, {:class => "span4",
+                                                    :disabled => book_disabled} %>
+        <hr class="space"/>
+
+      </div>
+
+      <div class="span4" id='file_input' style="<%= 'display:none;' if (@lot.bookid.present? &&
+              !book_edit && !book_disabled) %>">
+        <%=
+            f.file_field :cover, :class => "input-file",
+                         :size => 10, :alt_text => %{
+            Чтобы быстрее продать, загрузите хорошую обложку <strong>200х300
+            пикселей</strong> или больше.}.html_safe
+        %>
+      </div>
+
+      <!-- to be hidden on load -->
+      <div class="span4 offset1" id='prepared_book'
+           style="<%= 'display:none;' if @lot.bookid.blank? || book_edit || book_disabled %>">
+        <div class="pull-left middle-lot-image">
+          <ul class="media-grid">
+            <li><a href="#"><img src="<%= @ready_book.get_cover(:x200) if @ready_book %>"
+                                 class="book-cover200 thumbnail"></a></li>
+          </ul>
+          <%= f.hidden_field :bookid %>
+          <%= f.hidden_field :ozonid %>
+          <%= f.hidden_field :ozon_coverid %>
+          <%= f.hidden_field :ozon_flag %>
+        </div>
+      </div>
+
+    </div>
+    <div id='suggest_form' <%= "data-has-suggest-flag=yes".html_safe unless (book_edit || book_disabled) %>>
+    </div>
+    <div class="row">
+      <div class="span2">
+        <%= f.text_field :price, :class => "span2", :size => 3, :alt_text => "Целое число в рублях" %>
+      </div>
+      <div class="span3">
+        <%= f.select :cityid, cities_rev, {}, {:class => "span3"} %>
+      </div>
+      <div class="offset1 span3">
+        <%= f.text_field :phone, :class => "span3" %>
+      </div>
+      <div class="span3">
+        <%= f.text_field :skypename, :class => "span3" %>
+      </div>
+      <div class="span4">
+        <div class="clearfix <%= f.field_error(:can_deliver) + " " + f.field_error(:can_postmail) %>">
+          <label id="optionsCheckboxes">Дополнительно</label>
+
+          <div class="input">
+            <%= f.check_box :can_deliver, :original => true %>
+            <span>могу доставить по городу</span>
+            <br/>
+            <%= f.check_box :can_postmail, :original => true %>
+            <span>могу отправить по почте</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span10">
+        <%= f.text_area :comment, :class => "span10", :rows => 3, :alt_text => %{
+          Дополнительная информация о книге и том, как с вами связаться. До 255 букв.
+          Запрещен спам и нарушения #{link_to "правил", pages_path('terms', :html)}.}.html_safe
+        %>
+      </div>
+      <div class="span4 offset2">
+        <div class="clearfix">
+          <label for="textarea">&nbsp;</label>
+
+          <div class="input">
+            <%= f.submit (book_edit ? "Сохранить" : "Создать"), :class => "btn large danger span4" %>
+          </div>
+        </div>
+      </div>
+    </div>
+<% end %>

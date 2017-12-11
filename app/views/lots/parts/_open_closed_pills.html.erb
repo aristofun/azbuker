@@ -1,0 +1,12 @@
+<%
+   active = (params[:is_active] == 'false' ? false : true)
+   active_path = url_for(params.merge(:is_active => true))
+   inactive_path = url_for(params.merge(:is_active => false))
+
+   active_count ||= 'хз'
+   inactive_count ||= 'хз'
+%>
+<li class="<%= active ? 'active' : '' -%>"><%= link_to "Открытые (#{active_count})",
+                                                       active_path -%></li>
+<li class="<%= active ? '' : 'active' -%>"><%= link_to "Закрытые (#{inactive_count})",
+                                                       inactive_path -%></li>

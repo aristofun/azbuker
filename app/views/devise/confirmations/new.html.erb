@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="span-one-third offset5 well regbox">
+
+    <h4>Активация аккаунта</h4>
+
+    <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+                 :url => confirmation_path(resource_name),
+                 :html => {:class => "form-stacked passrecovery", :method => :post}) do |f| %>
+        <%= f.email_field :email, :class => "span5", :value => params[:email] %>
+        <%= f.submit "Отправить", :class => "btn  primary" %>
+        <br/>
+        <% if f.field_error(:email).present? %>
+            <br/>
+            <br/>
+            <%= link_to 'Регистрация', new_user_registration_path %>,
+            <%= link_to 'Вход', new_user_session_path %>
+        <% end %>
+    <% end %>
+  </div>
+</div>

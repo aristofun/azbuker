@@ -1,0 +1,35 @@
+/*
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+ *= require_self
+ *= require ./bootstrap
+ *= require ./elements
+ *= require ./lots
+ *= require ./overrides
+ *= require ./override_forms
+ *= require ./jquery.fancybox
+*/
+
+.small-text {
+    font-size: 11px;
+}
+
+.small-text * p {
+    font-size: 11px;
+}
+
+/*
+CSS for dropdown menus on HOver!
+http://stackoverflow.com/questions/8878033/how-to-make-twitter-bootstrap-menu-dropdown-on-hover-rather-than-click
+
+ul.nav li.dropdown:hover ul.dropdown-menu{
+    display: block;
+}
+
+a.menu:after, .dropdown-toggle:after {
+  content: none;
+}
+*/
+
+

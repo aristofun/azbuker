@@ -1,0 +1,207 @@
+<%
+   metatags =
+           {
+                   'og:image' => @lot.get_cover(:x300),
+                   'og:site_name' => 'Azbuker.ru',
+                   'og:description' => "Цена #{@lot.price} рублей"
+           }
+
+   if owner?
+     set_page_title("Продаю книгу #{h(@lot.book.title)} на Азбукере".html_safe)
+     metatags['og:title'] = "Продаю книгу '#{h(@lot.book.title)}'"
+   else
+     set_page_title("#{@lot.book.title}, #{@lot.book.authors_list} – купить книгу, #{cities[@lot.cityid]}")
+     metatags['og:title'] = "Продается книга '#{h(@lot.book.title)}'"
+   end
+
+   set_meta_tags(metatags)
+%>
+
+<%= render :partial => 'lots/parts/bread_crumb', :locals => {:lot => @lot} %>
+<div class="row">
+  <div class="span4"> <!-- book cover & stuff -->
+    <% if owner_or_admin? %>
+        <p>
+          <%= link_to 'Редактировать', edit_lot_path(@lot), :class => 'btn small success' -%>
+          <%= link_to 'Закрыть', close_lot_path, :class => 'btn small error',
+                      :confirm => t('messages.confirmation'),
+                      :method => :put if @lot.is_active? -%>
+          <%= link_to 'Открыть', close_lot_path(:active => true), :class => 'btn small primary',
+                      :confirm => t('messages.confirmation'),
+                      :method => :put if !@lot.is_active? && admin? -%>
+        </p>
+    <% end %>
+
+    <%= render 'lots/parts/big_lot_cover', :big_book => @lot.book, :cover => @lot.get_cover(:x300),
+               :show_lightbox => true, :cover_original => @lot.get_cover(:original) %>
+
+    <p>
+      <em><%= l(@lot.created_at, :format => :long) -%></em>
+    </p>
+
+    <p>
+      <small>
+        <%= link_to 'Продать такую же книгу на Азбукере',
+                    new_lot_path(:bookid => @lot.book_id),
+                    :class => '' -%>
+      </small>
+    </p>
+
+    <%= render :partial => 'lots/parts/ozon_partner_link', :locals => {:book => @lot.book} %>
+
+    <%= render :partial => 'lots/parts/share_buttons_left' %>
+  </div>
+
+  <div class="span9">
+    <div class="row">
+      <div class="span9">
+        <% if owner? %>
+            <strong>Расскажите френдам, это сильно ускорит процесс:</strong>
+
+            <p>
+
+              <!-- AddThis Button BEGIN -->
+
+            <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+              <a class="addthis_button_facebook"></a>
+              <a class="addthis_button_vk"></a>
+              <a class="addthis_button_twitter"></a>
+              <a class="addthis_button_livejournal"></a>
+              <a class="addthis_button_odnoklassniki_ru"></a>
+              <a class="addthis_button_email"></a>
+              <a class="addthis_button_gmail"></a>
+              <a class="addthis_button_compact"></a>
+              <a class="addthis_counter addthis_bubble_style"></a>
+            </div>
+            <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=aristofun"></script>
+            <!-- AddThis Button END -->
+
+            </p>
+            <hr class="lot-separator"/>
+        <% end %>
+
+        <% if @lot.is_active? %>
+            <%= content_tag(:h1, @lot.book.title) %>
+        <% else %>
+            <p><%= content_tag(:strong, 'Объявление закрыто, чтобы продать эту книгу создайте новое') %></p>
+            <%= content_tag(:p, @lot.book.title) %>
+        <% end %>
+        <%= content_tag(:h3) do %>
+            <%= authors_list(@lot.book) %>
+        <% end %>
+        <%= content_tag(:h2, "#{@lot.price} р.") %>
+        <br/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span5">
+        <p>Продавец: <%= link_to @lot.user.nickname, show_user_path(@lot.user) %></p>
+        <noindex>
+          <% if @lot.phone.present? %>
+              <p><span class="label important">телефон</span>
+                <%= content_tag(:strong, @lot.phone) -%></p>
+          <% end %>
+          <% if @lot.skypename.present? %>
+              <p><span class="label notice">skype</span>
+                <%= content_tag(:strong, link_to(@lot.skypename, "skype:#{@lot.skypename}?chat")) -%>
+              </p>
+          <% end %>
+        </noindex>
+      </div>
+      <div class="span4">
+        <p>Город:
+          <strong><%= cities[@lot.cityid] -%></strong>
+        </p>
+        <% if @lot.can_deliver? || @lot.can_postmail? %>
+            <ul>
+              <%= content_tag(:li, content_tag(:em, 'могу доставить по городу')) if @lot.can_deliver? %>
+              <%= content_tag(:li, content_tag(:em, 'могу выслать почтой')) if @lot.can_postmail?
+              %>
+            </ul>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @lot.comment.present? %>
+        <br/>
+
+        <div class="row">
+          <div class="span9">
+            <h6>Комментарий продавца:</h6>
+
+            <p><%= @lot.comment %></p>
+          </div>
+        </div>
+    <% end %>
+
+    <br/>
+
+    <div class="row" id="sendbtns_row">
+      <div class="span6">
+        <%= link_to 'Написать продавцу', "#sendmessage", {:class => 'btnMini btnSendMsg',
+                                                          :id => 'msg_btn'}
+        -%>
+      </div>
+      <div class="span3">
+        <p class="pull-right">
+          <%= link_to 'Пожаловаться', "#abuse", {:class => 'btnMini btnAbuse',
+                                                 :id => 'abuse_btn'}
+          -%>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <%= render 'lots/parts/sendmsg_form', :lotid => @lot.id, :userid => @lot.user_id %>
+      <%= render 'lots/parts/sendabuse_form', :lotid => @lot.id, :userid => @lot.user_id %>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="span9">
+        Все объявления: <%= link_to 'этого продавца', show_user_path(@lot.user) %>
+        (<%= @lot.user.lots.count -%>),
+        <% if @lot.book.authors.present? %>
+            <%= link_to 'книг этого автора', author_path(@lot.book.authors[0].id)
+            %> (<%= @lot.book.authors[0].books.count -%>)
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="span3">
+    <% if admin? %>
+        <p>
+          <%= link_to 'Удалить', lot_path, :class => 'btn small primary',
+                      :confirm => t('messages.confirmation'),
+                      :method => :delete -%>
+          <%= link_to 'Админка', odminko_lot_path(@lot), :class => 'btn small danger' -%>
+        </p>
+    <% end %>
+    <%= render :partial => 'lots/parts/sim_lots' %>
+  </div>
+</div>
+<% if @another_lots.present? %>
+    <br/>
+    <div class="row">
+      <div class="span12 offset4">
+        <h5>Другие книги продавца:</h5>
+
+        <% @another_lots.each_slice(4) do |lotz| %>
+            <div class="row">
+              <% lotz.each do |lot| %>
+                  <div class="span3">
+                    <p><%= link_to(
+                                   image_tag(lot.get_cover(:x120), :class => "book-cover120"),
+                                   lot_path(lot.id)) %></p>
+
+                    <p>
+                      <%= link_to lot.book.title, lot_path(lot.id) -%>
+                    </p>
+
+                    <p><strong><%= lot.price %> р.</strong></p>
+                    <br/>
+                  </div>
+              <% end %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+<% end %>

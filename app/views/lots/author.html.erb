@@ -1,0 +1,33 @@
+<%
+   set_page_title("#{@author.full} – книги автора на Азбукере")
+%>
+
+<div class="row">
+  <div class="span10">
+    <h3><%= @author.full -%>
+      &nbsp;
+      <small><%= plurize(@books.total_entries, 'книг', 'книга', 'книги') -%>
+        <%= link_to 'admin edit', odminko_author_path(@author) if admin? %>
+      </small>
+    </h3>
+  </div>
+  <div class="span3">
+    <%= city_chooser([:page, :cityid, :authorid], 'city-chooser') %>
+  </div>
+  <div class="span3">
+    <div class="pull-right dateprice-chooser">
+      <%= filter_link('по дате', 'date', true, true) -%> &nbsp;
+      <%= filter_link('по цене', 'price', false) -%> &nbsp;
+    </div>
+  </div>
+</div>
+<hr class="headerline"/>
+
+<!-- BIg books -->
+<%= render :partial => 'lots/parts/big_book4', :collection => @books.each_slice(4).to_a %>
+
+<div class="row">
+  <div class="span9 offset4">
+    <%= will_paginate(@books, :renderer => 'BootstrapPaginateRenderer') %>
+  </div>
+</div>

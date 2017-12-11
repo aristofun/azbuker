@@ -1,0 +1,16 @@
+<% set_page_title("Создание нового объявления") %>
+<div class="row">
+  <div class="span9">
+    <h2>Новое объявление
+    </h2>
+  </div>
+  <div class="span7">
+    <p class="pull-right rightrules">
+      <small>Создавая новое объявление, вы соглашаетесь с  <%= link_to 'правилами Азбукера',
+                                                                       pages_path('terms', :html) -%>
+      </small>
+    </p>
+  </div>
+</div>
+<hr class="headerline"/>
+<%= render 'lots/parts/form', :book_disabled => @lot.bookid.present? %>

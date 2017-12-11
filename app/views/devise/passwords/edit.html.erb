@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="span-one-third offset5 well regbox">
+
+    <h4>Смена пароля</h4>
+
+    <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+                 :url => password_path(resource_name),
+                 :html => {:class => "form-stacked passrecovery", :method => :put}) do |f| %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <%= f.text_field :password, :class => "span5" %>
+
+        <%= f.text_field :password_confirmation, :class => "span5" %>
+
+        <%= f.submit "Сменить", :class => "btn  primary" %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<%
+   if book.present?
+     linkline = "http://www.ozon.ru/?context=search&partner=azbuker&from=prt_logoc120&text=#{CGI.escape(book.title)}".html_safe
+   else
+     linkline = 'http://www.ozon.ru/?partner=azbuker'
+   end
+%>
+<p style="margin-left: 4px; padding-top: 10px; margin-bottom: 8px;">
+  <a href="<%= linkline -%>"
+     target='_blank' rel='nofollow'>
+    <%= image_tag('//static.ozone.ru/graphics/img_ass/buttons/partner_logo_new/120x80_blue.gif',
+                  :border => '0', :alt => 'OZON.ru') %>
+  </a>
+</p>

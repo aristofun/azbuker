@@ -1,0 +1,4 @@
+<p class="right-book"><strong><%= "#{similar_lot.price} р." -%></strong>
+  <br/> <%= "#{cities[similar_lot.cityid]}" -%>
+  <br/> <%= link_to 'смотреть &rarr;'.html_safe, lot_path(similar_lot) -%>
+</p>

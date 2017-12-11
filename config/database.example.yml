@@ -1,0 +1,53 @@
+# Actual config/database.yml should be on your dev,test & prod filesystem but NOT in your repo!
+#
+# Current code (as of 11 Dec 2017) is compatible with Postgres 9.4-9.6
+#
+# WARNING: Postgres cluster is supposed to be in UTF8 with ru_RU.UTF-8 locale (template1 DB).
+# This is required for fulltext search to work properly.
+# If your PG cluster is not, you may
+#     1) Update your cluster (preferred option if your projects content is mostly in russian) https://makandracards.com/makandra/18643-how-to-change-the-locale-of-a-postgresql-cluster
+#     2) Add TEMPLATE=template0 option when creating new DB for azbuker (this way only Azbuker databases will be in ru_RU.UTF-8 locale)
+#
+# Guide to prepare your DB (for each Rails.environment) — you may have test and dev share the same
+# user in the same Postgres cluster.
+#
+# > psql
+# CREATE USER username_for_azbuker WITH PASSWORD '' CREATEDB REPLICATION CONNECTION LIMIT 10;
+# CREATE DATABASE azbuker_%env%_db_name WITH LC_COLLATE='ru_RU.UTF-8' LC_CTYPE='ru_RU.UTF-8' ENCODING=UTF8 OWNER=username_for_azbuker;
+#
+# \dg -- to see all PG users
+# \l -- to see all PG databases
+# \q -- to quit Postgres console
+#
+# > RAILS_ENV=%env% bundle exec rake db:migrate
+# This step should be skipped for production (capistrano does migrations).
+#
+
+test:
+  adapter: postgresql
+  encoding: unicode    
+  template: template0
+  database: (azbuker_test_db)
+  pool: 5
+  username: (your_local_pg_user for azbuker)
+  password: (your_local_pg_user pass)
+  host: localhost
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  template: template0
+  database: (azbuker_dev_db)
+  pool: 5
+  username: (your_local_pg_user for azbuker)
+  password: (your_local_pg_user pass)
+  host: localhost
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: (azbuker_production_db)
+  pool: 5
+  username: (your_production_pg_user)
+  password: (your_production_pg_user pass)
+  host: localhost

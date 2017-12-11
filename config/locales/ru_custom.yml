@@ -1,0 +1,185 @@
+ru:
+  generic_errors:
+    sendmsg_form_failed: "Отправить сообщение не удалось, исправьте ошибки и попробуйте еще раз"
+    lot_not_saved: "Не удалось сохранить объявление, исправьте ошибки ниже"
+    lot_booktitle: "Невозможно создать такое объявление, проверьте название и жанр книги"
+    lot_bookauthors: "Ошибка поиска книги с такими авторами"
+    cancan: У вас нет прав на это действие
+
+  messages:
+    confirmation: 'Вы уверены?'
+    message_sent: 'Сообщение успешно отправлено'
+
+  mailer:
+    welcome_alert_subject: "Азбукер: добро пожаловать"
+    abuse_subject: "Жалоба на лот %{lotid}, user:%{userid}"
+    msg_subject: "Азбукер: вам сообщение по лоту %{lotid}"
+
+  interface:
+    user_page_title: книги пользователя %{username}
+
+  will_paginate:
+    previous_label: "&#9664;"
+    next_label: "&#9654;"
+
+  helpers:
+    select:
+      # Default value for :prompt => true in FormOptionsHelper
+      prompt: "Выберите: "
+
+    # Default translation keys for submit FormHelper
+    submit:
+      create: 'Создать %{model}'
+      update: 'Сохранить %{model}'
+      submit: 'Сохранить %{model}'
+
+    label:
+      user_message:
+        email: "Ваш e-mail:"
+        text: "Сообщение:"
+        captcha: "Пароль:"
+        type: "Суть:"
+
+      user:
+        email: "E-mail"
+        nickname: "Ваше имя"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        phone: "Телефон"
+        skypename: "Skype"
+        cityid: "Город"
+        current_password: "Текущий пароль"
+
+      lot:
+        book_title: "Название книги"
+        book_authors: "Автор"
+        book_genre: "Рубрика"
+        cover: "Обложка"
+        price: "Цена"
+        cityid: "Город"
+        phone: "Телефон"
+        skypename: "Skype"
+        comment: "Комментарий"
+
+
+  support:
+    select:
+      prompt: "Выберите: "
+
+    array:
+      words_connector: ", "
+      two_words_connector: " и "
+      last_word_connector: " и "
+
+  errors:
+    messages:
+      inclusion: "не в списке"
+      exclusion: "зарезервировано"
+      invalid: "не подходит"
+      confirmation: "не совпадает"
+      accepted: "нужно согласиться"
+      empty: "не может быть пустым"
+      blank: "не может быть пустым"
+      too_long: "должно быть короче %{count} знаков"
+      too_short: "должно быть не короче %{count} знаков"
+      wrong_length: "должно быть ровно %{count} знаков"
+      taken: "уже занято"
+      not_a_number: "это не число"
+      greater_than: "должно быть больше %{count}"
+      greater_than_or_equal_to: "должно быть больше или равно %{count}"
+      only_integer: "только целое неотрицательное число "
+      equal_to: "должно быть равно %{count}"
+      less_than: "должно быть меньше %{count}"
+      less_than_or_equal_to: "должно быть меньше или равно %{count}"
+      odd: "должно быть нечётно"
+      even: "должно быть чётн"
+      phone_format: "нужен в формате <nobr>(495) 123-45-67</nobr>"
+
+  activerecord:
+    models:
+      lot: Объявление
+
+    success:
+      created: "%{model} успешно создано"
+      updated: "%{model} успешно обновлено"
+      closed: "%{model} успешно закрыто"
+      opened: "%{model} успешно открыто"
+      destroyed: "%{model} успешно удалено нафиг!"
+
+  errors:
+    messages:
+      inclusion: "не в списке"
+      exclusion: "зарезервировано"
+      invalid: "не подходит"
+      confirmation: "не совпадает"
+      accepted: "нужно согласиться"
+      empty: "не может быть пустым"
+      blank: "не может быть пустым"
+      too_long: "должно быть короче %{count} знаков"
+      too_short: "должно быть не короче %{count} знаков"
+      wrong_length: "должно быть ровно %{count} знаков"
+      taken: "уже занято"
+      not_a_number: "это не число"
+      greater_than: "должно быть больше %{count}"
+      greater_than_or_equal_to: "должно быть больше или равно %{count}"
+      only_integer: "только целое неотрицательное число "
+      equal_to: "должно быть равно %{count}"
+      less_than: "должно быть меньше %{count}"
+      less_than_or_equal_to: "должно быть меньше или равно %{count}"
+      odd: "должно быть нечётно"
+      even: "должно быть чётн"
+      phone_format: "нужен в формате (ХХХ) 123-45-67"
+
+    template:
+      body: "There were problems with the following fields"
+      header:
+        one: "1 error prohibited this %{model} from being saved"
+        other: "%{count} errors prohibited this %{model} from being saved"
+
+  genres:
+    - "Другая литература..."
+    - "Деловая литература"
+    - "Учебники и пособия"
+    - "Проф. литература"
+    - "Художественная лит-ра"
+    - "Нехудожественная лит-ра"
+    - "Детям и родителям"
+    - "Букинистика и раритеты"
+
+  cities:
+    - "* любой город *"
+    - "Другой город"
+    - "Москва"
+    - "Санкт-Петербург"
+    - "Новосибирск"
+    - "Нижний Новгород"
+    - "Екатеринбург"
+    - "Самара"
+    - "Омск"
+    - "Казань"
+    - "Челябинск"
+    - "Ростов-на-Дону"
+    - "Уфа"
+    - "Волгоград"
+    - "Пермь"
+    - "Владивосток"
+    - "Иркутск"
+    - "Кемерово"
+    - "Краснодар"
+    - "Красноярск"
+    - "Томск"
+    - "Хабаровск"
+    - "Тверь"
+    - "Киев"
+
+  abuses:
+    - "Спам, реклама"
+    - "Мошенничество"
+    - "Хамство"
+    - "Нарушение закона"
+
+  paperclip:
+    errors:
+      upload_size: "Нельзя загружать файлы больше 4 мегабайт!"
+      img_type: "Загружать можно только картинки (gif,tiff,bmp,jpeg,png)!"
+      img_dimension: "Надо загрузить обложку минимум 200 на 200 пикселей!"

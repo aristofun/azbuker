@@ -1,0 +1,100 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  generic_errors:
+    sendmsg_form_failed: "Failed to send message. Fix errors below and try again."
+    lot_not_saved: "Can't save lot cause of the errors below"
+    lot_booktitle: "No such book"
+    lot_bookauthors: "No such authors"
+    cancan: You are not authorized for this
+
+  messages:
+    message_sent: 'Message sent successfully'
+    confirmation: 'Are you sure?'
+
+  mailer:
+    welcome_alert_subject: "Azbuker: welcome"
+    abuse_subject: "Abuse for lot %{lotid}, user:%{userid}"
+    msg_subject: "Azbuker: New message about your lot %{lotid}"
+
+  interface:
+    user_page_title: "%{username} profile"
+
+  will_paginate:
+    previous_label: "<strong>&#9664;</strong>"
+    next_label: "<strong>&#9654;</strong>"
+
+  time:
+    formats:
+      default: "%a, %d %b %Y, %H:%M:%S %z"
+      short: "%d %b, %H:%M"
+      long: "%d %B %Y, %H:%M"
+      cr_at: "%e %B %Y"
+      clock: "%H:%M"
+
+  errors:
+    messages:
+      inclusion: "не в списке"
+      exclusion: "зарезервировано"
+      invalid: "не подходит"
+      confirmation: "не совпадает"
+      accepted: "нужно согласиться"
+      empty: "не может быть пустым"
+      blank: "не может быть пустым"
+      only_integer: "только целое неотрицательное число"
+      too_long: "должно быть короче %{count} знаков"
+      too_short: "должно быть не короче %{count} знаков"
+      wrong_length: "должно быть ровно %{count} знаков"
+      taken: "уже занято"
+      not_a_number: "это не число"
+      greater_than: "должно быть больше %{count}"
+      greater_than_or_equal_to: "должно быть больше или равно %{count}"
+      equal_to: "должно быть равно %{count}"
+      less_than: "должно быть меньше %{count}"
+      less_than_or_equal_to: "должно быть меньше или равно %{count}"
+      odd: "должно быть нечётно"
+      even: "должно быть чётн"
+      phone_format: "Use (ХХХ) 123-45-67 form"
+
+  paperclip:
+    errors:
+      upload_size: "Maximum upload file size is 4 megabytes!"
+      img_type: "Only image file are allowed (gif,tiff,bmp,jpeg,png)!"
+      img_dimension: "Minimum picture size 200x200 allowed!"
+
+  genres:
+    - "Misc. books"
+    - "Business books"
+    - "Notebooks & workbooks"
+    - "Professional books"
+    - "Fiction"
+    - "Non-fiction"
+    - "for Kids & Parents"
+    - "Rare books"
+
+  cities:
+    - "*** Any city ***"
+    - "Other"
+    - "Moscow"
+    - "Saint-Petersburg"
+    - "Novoibirsk"
+    - "Nizhniy Novgorod"
+    - "Ekaterinburg"
+    - "Samara"
+    - "Omsk"
+    - "Kazan"
+    - "Cheljabinsk"
+    - "Rostov-na-Dony"
+    - "Ufa"
+    - "Volgograd"
+    - "Perm"
+    - "Vladivostok"
+    - "Irkutsk"
+    - "Kemerovo"
+    - "Krasnodar"
+    - "Krasnoyarsk"
+    - "Tomsk"
+    - "Habarovsk"
+    - "Tver"
+    - "Kiev"
