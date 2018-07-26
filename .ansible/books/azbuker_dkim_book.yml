@@ -1,0 +1,51 @@
+---
+- name: Setup DKIM
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+  become: true
+
+  tasks:
+    - lineinfile:
+        path: /etc/opendkim/KeyTable
+        line: mail._domainkey.azbuker.ru azbuker.ru:mail:/etc/opendkim/keys/azbuker.ru/mail.private
+
+    - lineinfile:
+        path: /etc/opendkim/TrustedHosts
+        line: *.azbuker.ru
+
+    - lineinfile:
+        path: /etc/opendkim/SigningTable
+        line: *@azbuker.ru mail._domainkey.azbuker.ru
+
+    - copy:
+        src: '../templates/dkim/keys/{{ item }}/mail.txt'
+        dest: '/etc/opendkim/keys/{{ item }}/'
+        mode: 0600
+        owner: root
+        group: root
+      with_items:
+        - azbuker.ru
+
+    - copy:
+        src: '../templates/dkim/keys/{{ item }}/mail.private'
+        dest: '/etc/opendkim/keys/{{ item }}'
+        mode: 0600
+        owner: opendkim
+        group: opendkim
+      with_items:
+        - azbuker.ru
+      notify:
+        - restart postfix
+        - restart opendkim
+
+  handlers:
+    - name: restart postfix
+      service: name=postfix state=restarted
+
+    - name: restart opendkim
+      service: name=opendkim state=restarted
+
+
+# Add/Update DKIM & SPF records in DNS
+#  2check
+#  sendmail check-auth@verifier.port25.com (Ctrl+D)

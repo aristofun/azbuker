@@ -1,0 +1,2 @@
+mail._domainkey	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4uI9GpWWhF69cKVhKF6cFBUlF6wTYGVHwAKFt9/jqR+hOaSVsqJj7kBZvgKBCqFJkc41oaBn9XnUpjLnQ3CsklyLBv4B16YY5Nwmeym0oPhPHvAZJkiBEW8/9OZUCw9k9dhdsE7eLhJp/cWm+MrX3M1/VRY8YlP//VWvQge8ZPQIDAQAB" )  ; ----- DKIM key mail for azbuker.ru

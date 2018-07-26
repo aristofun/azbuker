@@ -1,0 +1,79 @@
+---
+- name: Install nginx
+  hosts: web
+  remote_user: deploy
+  become: true
+
+  tasks:
+    - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: full
+
+#    taken from https://github.com/geerlingguy/ansible-role-passenger/blob/master/tasks/main.yml
+    # Variable setup.
+    - name: Include OS-specific variables.
+      include_vars: "../vars/{{ ansible_os_family }}.yml"
+
+    - name: Define nginx_user.
+      set_fact:
+        nginx_user: "{{ __nginx_user }}"
+      when: nginx_user is not defined
+
+    - name: Add apt HTTPS capabilities.
+      apt: "name={{ item }} state=present"
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+
+    - name: Install Python3, git, nginx and gunicorn
+      apt: "pkg={{ item }} state=latest"
+      with_items:
+       - python3
+       - python3-distutils
+       - python3-pip # never upgrade system pip! https://stackoverflow.com/a/49836753
+       - python3-venv
+       - supervisor
+       - nginx
+       - git
+
+    # Nginx and configuration.
+    - name: Copy Nginx configuration into place.
+      template:
+        src: ../vars/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+
+    # https://github.com/Supervisor/supervisor/issues/173
+    - name: chmod supervisor conf
+      lineinfile:
+        path: /etc/supervisor/supervisord.conf
+        state: present
+        regexp: '^chmod='
+        line: 'chmod=0760'
+
+    - name: chown supervisor
+      lineinfile:
+        path: /etc/supervisor/supervisord.conf
+        state: present
+        insertafter: '^chmod='
+        line: 'chown=root:adm'
+      notify: restart supervisor
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+    - name: restart supervisor
+      service: name=supervisor state=restarted

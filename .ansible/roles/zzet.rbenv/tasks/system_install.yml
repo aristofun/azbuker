@@ -1,0 +1,109 @@
+---
+- name: checkout rbenv_repo for system
+  become: yes
+  become_user: '{{ rbenv_owner }}'
+  git: >
+    repo={{ rbenv_repo }}
+    dest={{ rbenv_root }}
+    version={{ rbenv.version }}
+    accept_hostkey=yes
+    force=yes
+
+- name: create plugins directory for system
+  become: yes
+  become_user: '{{ rbenv_owner }}'
+  file: state=directory path={{ rbenv_root }}/plugins
+
+- name: install plugins for system
+  become: yes
+  become_user: '{{ rbenv_owner }}'
+  git: >
+    repo={{ item.repo }}
+    dest={{ rbenv_root }}/plugins/{{ item.name }}
+    version={{ item.version }}
+    accept_hostkey=yes
+    force=yes
+  with_items: "{{ rbenv_plugins }}"
+
+- name: add rbenv initialization to profile system-wide
+  template: src=rbenv_system.sh.j2 dest=/etc/profile.d/rbenv.sh owner=root group=root mode=0755
+  become: yes
+  when:
+    - ansible_os_family != 'OpenBSD' and ansible_os_family != 'Darwin'
+
+- name: Set group ownership of content under rbenv_root
+  shell:
+    find '{{ rbenv_root }}'
+      \( -iname ".git" -prune \) -o
+      ! -group '{{ item }}'
+      -exec chgrp -v '{{ item }}' {} + | head -n 1
+  become: yes
+  with_items: '{{ rbenv_group | default([]) }}'
+  when:
+    - rbenv_group is defined
+    - rbenv_group != None
+  register: rbenv_chgrp
+  changed_when: '"changed group" in rbenv_chgrp.stdout'
+
+- name: Set group permissions of content under rbenv_root
+  shell:
+    find '{{ rbenv_root }}'
+      \( -iname ".git" -prune \) -o
+      -type d ! -perm -g+s
+      -exec chmod -v g+rwxs {} + | head -n 1
+  become: yes
+  when:
+    - rbenv_group is defined
+    - rbenv_group != None
+  register: rbenv_chmod
+  changed_when: '"changed from" in rbenv_chmod.stdout'
+
+- name: check ruby versions installed for system
+  shell: $SHELL -lc "rbenv versions --bare"
+  register: rbenv_versions
+  with_items: rbenv.rubies
+  changed_when: false
+  ignore_errors: yes
+  failed_when: false
+  check_mode: no
+
+- name: install ruby versions for system
+  shell: bash -lc "rbenv install --skip-existing {{ item.version }}"
+  become: yes
+  with_items:
+    - '{{ rbenv.rubies }}'
+  environment: "{{ item.env | default({}) | combine({ 'TMPDIR': rbenv_tmpdir }) }}"
+
+- name: check which old rubies to remove for system
+  set_fact:
+    drop_ruby: "{{ '{'+item[0].stdout_lines|list|difference(item[1])|join(',')+'}'}}"
+  become: yes
+  with_nested:
+    - "{{ rbenv_versions.results }}"
+    - "{{ rbenv.rubies|map(attribute='version')|list }}"
+  when:
+    - rbenv_clean_up
+    - item[0].stdout_lines|list != item[1]
+  register: removable_rubies
+  ignore_errors: yes
+
+- name: remove old rubies
+  shell: $SHELL -lc "rm -rf {{ rbenv_root }}/versions/{{ ansible_facts.drop_ruby }}"
+  changed_when: false
+  become: yes
+  when: rbenv_clean_up
+  ignore_errors: yes
+
+- name: check if current system ruby version is {{ rbenv.default_ruby }}
+  shell: $SHELL -lc "rbenv version | cut -d ' ' -f 1 | grep -Fx '{{ rbenv.default_ruby }}'"
+  register: ruby_selected
+  changed_when: false
+  ignore_errors: yes
+  failed_when: false
+  check_mode: no
+
+- name: set ruby {{ rbenv.default_ruby }} for system
+  become: yes
+  shell: bash -lc "rbenv global {{ rbenv.default_ruby }} && rbenv rehash"
+  when:
+    - ruby_selected.rc != 0

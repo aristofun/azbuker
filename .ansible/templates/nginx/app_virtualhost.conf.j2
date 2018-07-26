@@ -1,0 +1,24 @@
+server {
+    # listen on port 4242 (via http)
+    listen 4242;
+    server_name {{ server_name }};
+
+    # write access and error logs to /var/log
+    access_log off; #{{ logs_dir }}/access.log;
+    error_log {{ logs_dir }}/error.log;
+
+    location / {
+        # forward application requests to the gunicorn server
+        proxy_pass http://{{ gunicorn_host }};
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /static {
+        # handle static files directly, without forwarding to the application
+        alias {{ app_root }}/current/static;
+        expires 30d;
+    }
+}
