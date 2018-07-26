@@ -16,7 +16,7 @@ set :deploy_to, "/usr/sites/#{application}"
 set :deploy_via, :remote_cache
 set :use_sudo, false
 
-set :rbenv_ruby_version, '2.1.5'
+set :rbenv_ruby_version, '2.1.10'
 # set :rbenv_type, :user
 # set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 # set :rbenv_map_bins, %w{rake gem bundle ruby rails}
