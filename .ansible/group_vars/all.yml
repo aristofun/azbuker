@@ -3,4 +3,5 @@ _nginx_user: "www-data"
 _server_url: "goodprogrammer.ru"
 _host_name: "goodprogrammer"
 _ruby: 2.1.10
+_rbenv: v1.1.1
 _remote_user: joe

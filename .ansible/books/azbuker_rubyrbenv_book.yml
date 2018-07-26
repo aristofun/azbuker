@@ -1,0 +1,29 @@
+---
+- name: Ruby setup
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+  become: true
+  gather_facts: true
+  vars:
+    rbenv:
+      env: user
+      version: '{{ _rbenv }}'
+      default_ruby: '{{ _ruby }}'
+      rubies:
+        - version: '{{ _ruby }}'
+
+  roles:
+    - role: zzet.rbenv
+      rbenv_users:
+        - '{{ _remote_user }}'
+
+  post_tasks:
+      - command: 'sudo -iu {{ _remote_user }} gem update --system'
+      #      https://github.com/ansible/ansible/issues/4854
+
+
+#  2check (from _remote_user login shell!)
+#  ls -ls ~/.rbenv/
+#  rbenv -v
+# all versions must be in place owned by _remote_user
+#   https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-16-04
