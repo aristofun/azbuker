@@ -1,0 +1,36 @@
+---
+- name: Create PG user+DB
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+  become: true
+
+  tasks:
+  - include_vars:
+      file: ../../config/database.yml
+      name: railsdb
+
+  # required for postgresql_ ansible tasks
+  - apt:
+      name: python3-psycopg2,acl
+
+  - name: Create User
+    become_user: postgres
+    postgresql_user:
+      name: "{{ item.username }}"
+      password: "{{ item.password }}"
+      conn_limit: "{{ railsdb.default.pool|int * 5 }}"
+      role_attr_flags: LOGIN,CREATEDB,NOSUPERUSER,NOCREATEROLE,NOREPLICATION
+    with_items:
+      - '{{ railsdb.production }}'
+
+  - name: Create DB
+    become_user: postgres
+    postgresql_db:
+      name: "{{ item.database }}"
+      encoding: "{{ item.encoding }}"
+      lc_collate: "{{ item.collation }}"
+      lc_ctype: "{{ item.ctype }}"
+      template: "{{ item.template }}"
+      owner: "{{ item.username }}"
+    with_items:
+      - '{{ railsdb.production }}'

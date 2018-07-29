@@ -4,7 +4,7 @@ set :whenever_command, 'bundle exec whenever'
 
 require 'whenever/capistrano'
 
-server 'azbuker.ru', :web, :app, :db, :primary => true
+server ENV['cap_host'] || 'azbuker.ru', :web, :app, :db, :primary => true
 
 set :application, 'azbuker'
 
@@ -12,11 +12,12 @@ set :user, 'joe'
 set :repository, 'git@github.com:aristofun/azbuker.git'
 set :scm, :git
 set :branch, 'master'
-set :deploy_to, "/usr/sites/#{application}"
+set :apps_dir, ENV['cap_apps_dir'] || '/home/joe/apps' # old: /usr/sites
+set :deploy_to, "#{apps_dir}/#{application}"
 set :deploy_via, :remote_cache
 set :use_sudo, false
 
-set :rbenv_ruby_version, '2.1.10'
+set :rbenv_ruby_version, ENV['cap_ruby'] || '2.1.10'
 # set :rbenv_type, :user
 # set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 # set :rbenv_map_bins, %w{rake gem bundle ruby rails}
@@ -134,7 +135,7 @@ namespace :my do
   task :sync_ozbooks_counter do
     abort 'local_path not set!' unless ENV['local_path']
     local = "#{ENV['local_path']}/system/ozbooks/"
-    remote = 'joe@azbuker.ru:/usr/sites/azbuker/shared/system/ozbooks/'
+    remote = "#{user}{@azbuker.ru:#{apps_dir}/#{application}{/shared/system/ozbooks/"
     system("rsync -qrpt --rsh=ssh  #{remote} #{local}")
     # system("rsync -qrpt --rsh=ssh  #{local} #{remote}")
   end
@@ -143,7 +144,7 @@ namespace :my do
   task :sync_uploads do
     abort 'local_path not set!' unless ENV['local_path']
     local = "#{ENV['local_path']}/system/"
-    remote = 'joe@azbuker.ru:/usr/sites/azbuker/shared/system/'
+    remote = "#{user}@azbuker.ru:#{apps_dir}/#{application}/shared/system/"
 
     if ENV['upload']
       system("rsync -qrpt --delete --progress --rsh=ssh #{local} #{remote}")

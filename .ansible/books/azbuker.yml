@@ -1,0 +1,8 @@
+---
+- import_playbook: _dkim_book.yml
+- import_playbook: _rubyrbenv_book.yml
+- import_playbook: _postgres_book.yml
+- import_playbook: _appfiles_book.yml
+- import_playbook: _healthcheck_book.yml
+
+# All GP rails app stuff ::3

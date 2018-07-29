@@ -35,6 +35,7 @@ group :test, :development do
   gem 'letter_opener'
   gem 'rspec-rails', '~> 2.14'
   gem 'capistrano', '~> 2.13'
+  gem 'net-ssh', '~> 4.2'
   gem 'capistrano-rbenv', '~> 1.0'
 
   gem 'terminal-notifier-guard'
@@ -46,6 +47,7 @@ group :test, :development do
 
   gem 'factory_girl_rails', '~> 4.3'
   gem 'capybara', '~> 2.2'
+  gem 'xpath', '~> 2.1'
   gem 'guard', '~> 2.1'
   gem 'guard-rspec', '~> 4.2'
   gem 'faker', '~> 1.2'

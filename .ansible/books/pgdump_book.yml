@@ -1,0 +1,68 @@
+---
+- name: Backup GP prod&stage databases to local folder
+  hosts: '{{ hostlist | default("all") }}'
+  remote_user: '{{ _remote_user }}'
+  become: true
+
+  tasks:
+    - include_vars:
+        file: ../../config/database.yml
+        name: railsdb
+
+  # required for postgresql_ ansible tasks
+    - apt:
+        name: python3-psycopg2,acl
+
+    - file:
+        path: /tmp/pgdumps/
+        state: directory
+        owner: postgres
+        group: postgres
+
+#  issues with postgres user /var/tmp access https://github.com/ansible/ansible/issues/16048
+    - name: Dump stage & prod databases
+      become_user: postgres
+      postgresql_db:
+        name: '{{ item }}'
+        state: dump
+        target: '/tmp/pgdumps/{{ item }}.bz2'
+        target_opts: -c # clean dump with DROPs
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+#      target_opts: '-T except table | -t only table '
+
+    - name: Download dumps locally
+      fetch:
+        src: '/tmp/pgdumps/{{ item }}.bz2'
+        dest: '../../tmp/pgdumps/{{ item }}.bz2'
+        flat: yes
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+      when: pgdump_remote is not defined
+
+    - name: copy files from old to new node
+      become: false
+      shell: 'rsync -qrpt --delete --compress --rsh=ssh /tmp/pgdumps/ {{ groups["new"][0] }}:/tmp/pgdumps/'
+      when: pgdump_remote is defined
+
+    - file:
+        path: '/tmp/pgdumps/{{ item }}.bz2'
+        state: absent
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+
+# 2check
+# locally look at /tmp/dumps/
+# remotely look at /tmp/dumps/
+#
+
+# multiple nodes sudo passwords workarounds
+# https://serverfault.com/questions/560106/how-can-i-implement-ansible-with-per-host-passwords-securely
+# https://github.com/ansible/ansible/issues/15297
+
+#- import_tasks: wordpress.yml
+#  vars:
+#    wp_user: timmy

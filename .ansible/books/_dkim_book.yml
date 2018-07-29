@@ -1,0 +1,41 @@
+---
+- name: Setup DKIM
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+  become: true
+
+  tasks:
+    - lineinfile:
+        path: /etc/opendkim/KeyTable
+        line: mail._domainkey.{{ _server_url }} {{ _server_url }}:mail:/etc/opendkim/keys/{{ _server_url }}/mail.private
+
+    - lineinfile:
+        path: /etc/opendkim/TrustedHosts
+        line: '*.{{ _server_url }}'
+
+    - lineinfile:
+        path: /etc/opendkim/SigningTable
+        line: '*@{{ _server_url }} mail._domainkey.{{ _server_url }}'
+
+    - copy:
+        src: '../templates/dkim/keys/{{ _server_url }}'
+        dest: '/etc/opendkim/keys/'
+        mode: 0600
+        owner: root
+        group: root
+
+    - file:
+        path: '/etc/opendkim/keys/{{ _server_url }}/mail.private'
+        mode: 0600
+        owner: opendkim
+        group: opendkim
+      notify:
+        - restart postfix
+        - restart opendkim
+
+  handlers:
+    - name: restart postfix
+      service: name=postfix state=restarted
+
+    - name: restart opendkim
+      service: name=opendkim state=restarted

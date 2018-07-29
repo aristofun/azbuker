@@ -1,0 +1,79 @@
+---
+- name: Restore GP prod&stage databases from folder
+  hosts: '{{ hostlist | default("all") }}'
+  remote_user: '{{ _remote_user }}'
+  become: true
+
+  tasks:
+    - include_vars:
+        file: ../../config/database.yml
+        name: railsdb
+
+  # required for postgresql_ ansible tasks
+    - apt:
+        name: python3-psycopg2,acl
+
+    - file:
+        path: /tmp/pgdumps/
+        state: directory
+        owner: postgres
+        group: postgres
+        recurse: yes
+
+    - name: Upload dumps from local
+      copy:
+        dest: '/tmp/pgdumps/{{ item }}.bz2'
+        src: '../../tmp/pgdumps/{{ item }}.bz2'
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+      when: pgdump_remote is not defined
+
+    - name: Create User
+      become_user: postgres
+      postgresql_user:
+        name: "{{ item.username }}"
+        password: "{{ item.password }}"
+        conn_limit: "{{ railsdb.default.pool|int * 5 }}"
+        role_attr_flags: LOGIN,CREATEDB,NOSUPERUSER,NOCREATEROLE,NOREPLICATION
+      with_items:
+        - '{{ railsdb.production }}'
+        - '{{ railsdb.staging }}'
+
+    - name: Create DB
+      become_user: postgres
+      postgresql_db:
+        name: "{{ item.database }}"
+        encoding: "{{ item.encoding }}"
+        lc_collate: "{{ item.collation }}"
+        lc_ctype: "{{ item.ctype }}"
+        template: "{{ item.template }}"
+        owner: "{{ item.username }}"
+      with_items:
+        - '{{ railsdb.production }}'
+        - '{{ railsdb.staging }}'
+
+      #  issues with postgres user /var/tmp access https://github.com/ansible/ansible/issues/16048
+    - name: Restore stage & prod databases
+      become_user: postgres
+      postgresql_db:
+        name: '{{ item }}'
+        state: restore
+        target: '/tmp/pgdumps/{{ item }}.bz2'
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+
+    - file:
+        path: '/tmp/pgdumps/{{ item }}.bz2'
+        state: absent
+      with_items:
+        - '{{ railsdb.production.database }}'
+        - '{{ railsdb.staging.database }}'
+
+
+# 2check
+# sudo -u postgres psql -U postgres
+# \du
+# \l
+# SELECT rolpassword FROM pg_authid;

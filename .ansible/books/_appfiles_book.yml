@@ -1,0 +1,78 @@
+---
+- name: Prepare app dirs and services
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+  become: false
+
+  roles:
+    - role: nickhammond.logrotate
+      become: true
+
+      logrotate_scripts:
+      - name: '{{ _host_name }}'
+        paths:
+          - '{{ _apps_path }}/{{ _host_name }}/shared/log/*.log'
+        options:
+          - daily
+          - rotate 7
+          - missingok
+          - compress
+          - delaycompress
+          - notifempty
+          - create 0666 {{ _remote_user }} {{ _remote_user }}
+
+  tasks:
+    - name: Disable old node WEBsite
+      local_action: command bundle exec cap deploy:web:disable cap_host={{ groups["current"][0] }} cap_ruby={{ _old_ruby }} cap_apps_dir={{ _old_apps_path }}
+      when: domigrate is defined
+
+    - name: Ensure apps dir
+      file:
+        path: '{{ _apps_path }}'
+        state: directory
+
+    - name: copy .env
+      copy:
+        src: ../../.env
+        dest: '{{ _apps_path }}/{{ _host_name }}/shared/'
+
+    - name: copy database.yml
+      copy:
+        src: ../../config/database.yml
+        dest: '{{ _apps_path }}/{{ _host_name }}/shared/config/'
+
+    - name: setup capistrano folder
+      local_action: command bundle exec cap deploy:setup cap_host={{ groups["new"][0] }}
+
+    - name: Copy system uploads
+      shell: 'rsync -qrpt --delete --compress --rsh=ssh {{ groups["current"][0] }}:{{ _old_apps_path }}/{{ _host_name }}/shared/public/system {{ _apps_path }}/{{ _host_name }}/shared/public/'
+      when: domigrate is defined
+
+    - name: Configure virtual host
+      become: true
+      template:
+        src: ../templates/nginx/app_virtualhost.conf.j2
+        dest: /etc/nginx/sites-available/10_{{ _host_name }}.conf
+      notify: restart nginx
+
+    - name: Ensure virtual host is enabled
+      become: true
+      file:
+        src: /etc/nginx/sites-available/10_{{ _host_name }}.conf
+        dest: /etc/nginx/sites-enabled/10_{{ _host_name }}.conf
+        state: link
+      notify: restart nginx
+
+# 4tubi.ru
+#    - name: Copy resque workers autostart
+#      lineinfile:
+#        path: '/home/{{ _remote_user }}/start-resque-workers.sh'
+#        line: cd {{ _apps_path }}/bibeta/current && $HOME/.rbenv/bin/rbenv exec bundle exec rake RACK_ENV=production RAILS_ENV=production  QUEUE="bibeta*" PIDFILE={{ _apps_path }}/bibeta/shared/tmp/pids/resque_work_1.pid BACKGROUND=yes VERBOSE=1 INTERVAL=25 environment resque:work >> /dev/null 2>> /dev/null
+
+    - name: Capistrano test deploy
+      local_action: command bundle exec cap pushdep cap_host={{ groups["new"][0] }}
+
+  handlers:
+    - name: restart nginx
+      become: true
+      service: name=nginx state=restarted

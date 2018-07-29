@@ -1,24 +1,59 @@
 server {
-    # listen on port 4242 (via http)
-    listen 4242;
-    server_name {{ server_name }};
+    listen 80;
+    server_name www.{{ _server_url }} .{{ _server_url }} azbooker.ru;
+    rewrite  ^   http://{{ _server_url }}$request_uri;
+}
 
-    # write access and error logs to /var/log
-    access_log off; #{{ logs_dir }}/access.log;
-    error_log {{ logs_dir }}/error.log;
+server {
+  listen       80;
+  server_name {{ _server_url }};
+  root {{ _apps_path }}/{{ _host_name }}/current/public;
 
-    location / {
-        # forward application requests to the gunicorn server
-        proxy_pass http://{{ gunicorn_host }};
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  passenger_ruby /home/{{ _remote_user }}/.rbenv/versions/{{ _ruby }}/bin/ruby;
+  passenger_max_requests 40000;
+  passenger_enabled on;
+  passenger_min_instances 0;
+  rails_env production;
+
+  access_log off;
+  error_log /var/log/nginx/{{ _host_name }}_error.log;
+  #access_log /var/log/nginx/{{ _host_name }}_access.log;
+
+  error_page  404              /pages/404.html;
+  error_page   500 502 504  /pages/500.html;
+  error_page 503 @503;
+
+  # Return a 503 error if the maintenance page exists.
+  if (-f {{ _apps_path }}/{{ _host_name }}/shared/public/system/maintenance.html) {
+      return 503;
+  }
+
+  location @503 {
+    # Serve static assets if found.
+    if (-f $request_filename) {
+      break;
     }
 
-    location /static {
-        # handle static files directly, without forwarding to the application
-        alias {{ app_root }}/current/static;
-        expires 30d;
-    }
+    # Set root to the shared directory.
+    root {{ _apps_path }}/{{ _host_name }}/shared/public;
+    rewrite ^(.*)$ /system/maintenance.html break;
+  }
+
+  # http://tweaked.io/guide/nginx/
+  location ~* \.(jpg|jpeg|gif|png|ico|xml)$ {
+       access_log        off;
+       log_not_found     off;
+       expires           7d;
+  }
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+  location ~* /system/.*\.(txt|rb|php|html|xml|json)$ {
+      add_header Content-Disposition "attachment;";
+      add_header Content-Type application/octet-stream;
+  }
 }

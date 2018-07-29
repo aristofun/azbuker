@@ -108,3 +108,59 @@ psql -f (путь к файлу azbuker_oz_books.sql) (имя вашей dev б�
 Код можно использовать только в личных, учебно-позновательных целях и для развития данного проекта. 
 Использование кода или его частей в других проектах разрешается только с явного согласия автора 
 данного репозитория. 
+
+#### Поддержка Ansible 
+Добавлена для внутреннего употребления, для удобного деплоя и развертки на новых нодах.
+
+##### 1 
+Close old node apps (maintenance mode or shutdown) to avoid data loss.
+New ubuntu 16 node must be ready and have all system services installed.
+
+```
+cap deploy:web:disable cap_host=88.99.172.149 cap_ruby=2.1.5 cap_apps_dir='/usr/sites'
+```
+
+##### 2
+
+```
+ansible-playbook  .ansible/books/azbuker_book.yml -e "domigrate=yes"
+```
+
+domigrate option copies all capistrano files from current azbuker node
+
+##### 3
+
+Migrate data: 
+
+```
+ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current -e "pgdump_remote=yes"
+ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l new -e "pgdump_remote=yes"
+```
+
+NOTE: different sudo pass on different nodes.
+
+##### 4
+
+- Update DNS, SPF, DKIM records, Reverse DNS
+- wait until DNS propagates
+- shutdown and drop old node
+
+```
+cap deploy:web:enable
+```
+
+##### Ansible DB backup 
+
+# DB backup & restore
+
+Full DB backup to local FS in `/tmp/pgdumps/<db_name>.bz2` folder:
+
+```
+ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current|new
+```
+
+Restore from local `/tmp/pgdumps/<db_name>.bz2` full dump:
+
+```
+ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l current|new
+```

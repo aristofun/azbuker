@@ -1,4 +1,0 @@
----
-- import_playbook: 0_sshroot_book.yml
-- import_playbook: 1_vpsinit_book.yml
-- import_playbook: 2_python3_nginx_book.yml

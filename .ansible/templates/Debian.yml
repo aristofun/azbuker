@@ -1,8 +1,0 @@
----
-_nginx_user: "www-data"
-_server_url: "goodprogrammer.ru"
-_host_name: "goodprogrammer"
-_dkim_host: "inet:12301@localhost"
-_dkim_milter: "inet:localhost:12301"
-_dkim_path: "/etc/opendkim/"
-_ruby: "2.4.4"

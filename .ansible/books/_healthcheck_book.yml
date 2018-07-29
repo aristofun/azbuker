@@ -1,0 +1,18 @@
+---
+- name: Healthchecks after new node setup
+  hosts: new
+  remote_user: '{{ _remote_user }}'
+
+  tasks:
+    - name: Passenger
+      shell: passenger-config validate-install --auto
+      ignore_errors: yes
+
+    - shell: service redis_6379 status
+      ignore_errors: yes
+    - shell: service nginx status
+      ignore_errors: yes
+    - shell: service postfix status
+      ignore_errors: yes
+    - shell: service postgresql@9.6-main status
+      ignore_errors: yes
