@@ -43,6 +43,9 @@ before 'deploy:update', 'my:backup:main' unless ENV['nobackup']
 before 'deploy:update', 'my:backup:all' if ENV['backupall']
 after 'deploy:restart', 'my:sync_uploads' #unless ENV['nobackup']
 
+after 'deploy:web:enable', 'my:restart_nginx'
+after 'deploy:web:disable', 'my:restart_nginx'
+
 # if you're still using the script/reaper helper you will need
 # these http://github.com/rails/irs_process_scripts
 
@@ -88,6 +91,12 @@ namespace :my do
     puts 'Restarting PostgreS...'
     run 'sudo service postgresql restart'
   end
+
+  task :restart_nginx, :roles => :app, :except => {:no_release => true} do
+    puts 'Restarting nginx...'
+    run 'sudo service nginx restart'
+  end
+
 
   desc 'Remote Rake on Production ENV! Be careful.'
   task :remote_rake, :roles => :app do

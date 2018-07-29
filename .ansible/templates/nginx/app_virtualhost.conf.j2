@@ -24,19 +24,13 @@ server {
   error_page 503 @503;
 
   # Return a 503 error if the maintenance page exists.
-  if (-f {{ _apps_path }}/{{ _host_name }}/shared/public/system/maintenance.html) {
+  if (-f $document_root/system/maintenance.html) {
       return 503;
   }
 
   location @503 {
-    # Serve static assets if found.
-    if (-f $request_filename) {
-      break;
-    }
-
-    # Set root to the shared directory.
-    root {{ _apps_path }}/{{ _host_name }}/shared/public;
-    rewrite ^(.*)$ /system/maintenance.html break;
+    rewrite  ^(.*)$  /system/maintenance.html break;
+    break;
   }
 
   # http://tweaked.io/guide/nginx/
