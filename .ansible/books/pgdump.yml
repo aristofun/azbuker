@@ -50,7 +50,7 @@
 
     - name: copy files from old to new node
       become: false
-      shell: 'rsync -qrpt --delete --compress --rsh=ssh /tmp/pgdumps/ {{ groups["new"][0] }}:/tmp/pgdumps/'
+      shell: 'rsync -qrpt --delete --compress -e "ssh -o StrictHostKeyChecking=no" /tmp/pgdumps/ {{ groups["new"][0] }}:/tmp/pgdumps/'
       when: pgdump_remote is defined
 
     - file:
