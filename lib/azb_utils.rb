@@ -4,8 +4,8 @@
 
 class AzbUtils
 
-  MAIN_FILE = "azbuker_main.sql"
-  OZB_FILE = "azbuker_oz_books.sql"
+  MAIN_FILE = "azbuker_main"
+  OZB_FILE = "azbuker_oz_books"
   DB = "azbuk_prod"
 
   def self.pgdump_string(db, table, file)
