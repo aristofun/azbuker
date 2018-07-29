@@ -77,10 +77,10 @@ class Lot < ActiveRecord::Base
                          :x120 => ["120x120", :jpg]},
 
                     :convert_options => {
-                        :original => "-quality 68",
-                        :x300 => "-gravity center -extent 200x300 -quality 70",
-                        :x200 => "-gravity center -extent 200x200 -quality 72",
-                        :x120 => "-gravity center -extent 120x120 -quality 74"}
+                        :original => "-quality 64",
+                        :x300 => "-gravity center -extent 200x300 -quality 67",
+                        :x200 => "-gravity center -extent 200x200 -quality 70",
+                        :x120 => "-gravity center -extent 120x120 -quality 72"}
 
   validates_attachment_size :cover, :less_than => 4.megabytes, :message => I18n.t('paperclip.errors.upload_size')
 

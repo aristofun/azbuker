@@ -113,8 +113,17 @@ psql -f (путь к файлу azbuker_oz_books.sql) (имя вашей dev б�
 Добавлена для внутреннего употребления, для удобного деплоя и развертки на новых нодах.
 
 ##### 1 
-Close old node apps (maintenance mode or shutdown) to avoid data loss.
+
 New ubuntu 16 node must be ready and have all system services installed.
+
+```
+ansible-playbook  .ansible/books/azbuker_book.yml -e "domigrate=yes"
+```
+
+domigrate option copies all capistrano files from current azbuker node and closes the old node on maintenance
+
+
+Manually put old node to maintenance mode: 
 
 ```
 cap deploy:web:disable cap_host=88.99.172.149 cap_ruby=2.1.5 cap_apps_dir='/usr/sites'
@@ -122,15 +131,7 @@ cap deploy:web:disable cap_host=88.99.172.149 cap_ruby=2.1.5 cap_apps_dir='/usr/
 
 ##### 2
 
-```
-ansible-playbook  .ansible/books/azbuker_book.yml -e "domigrate=yes"
-```
-
-domigrate option copies all capistrano files from current azbuker node
-
-##### 3
-
-Migrate data: 
+Migrate all data: 
 
 ```
 ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
@@ -139,7 +140,7 @@ ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l new -e "pgdump_re
 
 NOTE: different sudo pass on different nodes.
 
-##### 4
+##### 3
 
 - Update DNS, SPF, DKIM records, Reverse DNS
 - wait until DNS propagates
