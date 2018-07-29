@@ -133,7 +133,11 @@ namespace :my do
 
   desc "Run: cap my:sync_ozbooks_counter local_path=/Volumes/other/2cloud/uploads/azbuker/"
   task :sync_ozbooks_counter do
-    abort 'local_path not set!' unless ENV['local_path']
+    unless ENV['local_path']
+      puts 'local_path not set! ignoring :sync_ozbooks_counter'
+      next
+    end
+
     local = "#{ENV['local_path']}/system/ozbooks/"
     remote = "#{user}{@azbuker.ru:#{apps_dir}/#{application}{/shared/system/ozbooks/"
     system("rsync -qrpt --rsh=ssh  #{remote} #{local}")
@@ -142,7 +146,11 @@ namespace :my do
 
   desc "Run: cap my:sync_uploads local_path=/Volumes/other/2cloud/uploads/azbuker/"
   task :sync_uploads do
-    abort 'local_path not set!' unless ENV['local_path']
+    unless ENV['local_path']
+      puts 'local_path not set! ignoring :sync_uploads'
+      next
+    end
+
     local = "#{ENV['local_path']}/system/"
     remote = "#{user}@azbuker.ru:#{apps_dir}/#{application}/shared/system/"
 
