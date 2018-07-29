@@ -7,5 +7,5 @@
 </label>
 
 <div class="input" id="captcha_div">
-  <%= recaptcha_tags(:display => {:lang => 'ru', :theme => 'white'}, :ajax => true) -%>
+  <%= recaptcha_tags(:ajax => true, :display => {:theme => 'white'}, :hl => 'ru') %>
 </div>

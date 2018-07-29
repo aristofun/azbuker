@@ -16,7 +16,7 @@ $(document).ready(
             });
 
             //  Send letter forms
-            $("div#captcha_div").appendTo('div#msg_block');
+
             $("div#abuse_form").hide();
 //            $("div#msg_form").hide();
 
@@ -34,7 +34,7 @@ $(document).ready(
                                         $("input#<%= t[0] %>_input").focus();
 
                                         // move captcha div
-                                        $('div#captcha_div').appendTo('div#<%= t[0] %>_block')
+                                        // $('div#captcha_div').appendTo('div#<%= t[0] %>_block')
                                     } else {
                                         $(window).scrollTop(0);
                                     }
