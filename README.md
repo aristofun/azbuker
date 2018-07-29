@@ -134,8 +134,8 @@ cap deploy:web:disable cap_host=88.99.172.149 cap_ruby=2.1.5 cap_apps_dir='/usr/
 Migrate all data: 
 
 ```
-ansible-playbook  .ansible/books/pgdump_book.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
-ansible-playbook  .ansible/books/pgrestore_book.yml -l new -e "pgdump_remote=yes dump_ozbooks=yes"
+ansible-playbook  .ansible/books/pgdump.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
+ansible-playbook  .ansible/books/pgrestore.yml -l new -e "pgdump_remote=yes dump_ozbooks=yes"
 ```
 
 NOTE: different sudo pass on different nodes.
@@ -157,11 +157,11 @@ cap deploy:web:enable
 DB backup to local `/tmp/pgdumps/*.bz2`:
 
 ```
-ansible-playbook  .ansible/books/pgdump_book.yml -l current|new [-e "dump_ozbooks=yes"]
+ansible-playbook  .ansible/books/pgdump.yml -l current|new [-e "dump_ozbooks=yes"]
 ```
 
 Restore from local `/tmp/pgdumps/*.bz2`:
 
 ```
-ansible-playbook  .ansible/books/pgrestore_book.yml -l current|new [-e "dump_ozbooks=yes"]
+ansible-playbook  .ansible/books/pgrestore.yml -l current|new [-e "dump_ozbooks=yes"]
 ```
