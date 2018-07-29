@@ -46,7 +46,7 @@ Azbuker::Application.configure do
       port: 6379,
       db: 0,
       namespace: 'azbuker',
-      expires_in: 10.hours
+      expires_in: 5.days
   }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server

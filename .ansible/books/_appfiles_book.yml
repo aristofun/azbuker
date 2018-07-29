@@ -45,7 +45,7 @@
       local_action: command bundle exec cap deploy:setup cap_host={{ groups["new"][0] }}
 
     - name: Copy system uploads
-      shell: 'rsync -qrpt --delete --compress --rsh=ssh {{ groups["current"][0] }}:{{ _old_apps_path }}/{{ _host_name }}/shared/public/system {{ _apps_path }}/{{ _host_name }}/shared/public/'
+      shell: 'rsync -qrpt --delete --compress --rsh=ssh {{ groups["current"][0] }}:{{ _old_apps_path }}/{{ _host_name }}/shared/system {{ _apps_path }}/{{ _host_name }}/shared/'
       when: domigrate is defined
 
     - name: Configure virtual host

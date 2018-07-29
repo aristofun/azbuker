@@ -117,7 +117,7 @@ psql -f (путь к файлу azbuker_oz_books.sql) (имя вашей dev б�
 New ubuntu 16 node must be ready and have all system services installed.
 
 ```
-ansible-playbook  .ansible/books/azbuker_book.yml -e "domigrate=yes"
+ansible-playbook  .ansible/books/azbuker.yml -e "domigrate=yes"
 ```
 
 domigrate option copies all capistrano files from current azbuker node and closes the old node on maintenance
@@ -134,8 +134,8 @@ cap deploy:web:disable cap_host=88.99.172.149 cap_ruby=2.1.5 cap_apps_dir='/usr/
 Migrate all data: 
 
 ```
-ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
-ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l new -e "pgdump_remote=yes dump_ozbooks=yes"
+ansible-playbook  .ansible/books/pgdump_book.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
+ansible-playbook  .ansible/books/pgrestore_book.yml -l new -e "pgdump_remote=yes dump_ozbooks=yes"
 ```
 
 NOTE: different sudo pass on different nodes.

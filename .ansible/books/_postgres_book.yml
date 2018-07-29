@@ -11,14 +11,14 @@
 
   # required for postgresql_ ansible tasks
   - apt:
-      name: python3-psycopg2,acl
+      name: python3-psycopg2 #,acl
 
   - name: Create User
     become_user: postgres
     postgresql_user:
       name: "{{ item.username }}"
       password: "{{ item.password }}"
-      conn_limit: "{{ railsdb.default.pool|int * 5 }}"
+      conn_limit: "{{ item.pool|int * 5 }}"
       role_attr_flags: LOGIN,CREATEDB,NOSUPERUSER,NOCREATEROLE,NOREPLICATION
     with_items:
       - '{{ railsdb.production }}'
@@ -28,7 +28,7 @@
     postgresql_db:
       name: "{{ item.database }}"
       encoding: "{{ item.encoding }}"
-      lc_collate: "{{ item.collation }}"
+      lc_collate: "{{ item.collate }}"
       lc_ctype: "{{ item.ctype }}"
       template: "{{ item.template }}"
       owner: "{{ item.username }}"
