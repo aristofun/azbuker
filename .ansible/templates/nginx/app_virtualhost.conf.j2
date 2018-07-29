@@ -24,7 +24,7 @@ server {
   error_page 503 @503;
 
   # Return a 503 error if the maintenance page exists.
-  if (-f $document_root/system/maintenance.html) {
+  if (-f {{ _apps_path }}/{{ _host_name }}/shared/system/maintenance.html) {
       return 503;
   }
 
