@@ -71,7 +71,7 @@
 
     - name: Capistrano test deploy
       local_action: command bundle exec cap pushdep cap_host={{ groups["new"][0] }}
-      ignore_errors: true
+      notify: restart nginx
 
   handlers:
     - name: restart nginx

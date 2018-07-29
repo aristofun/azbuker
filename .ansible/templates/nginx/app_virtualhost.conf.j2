@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name www.{{ _server_url }} .{{ _server_url }} azbooker.ru;
+    server_name www.{{ _server_url }} azbooker.ru;
     rewrite  ^   http://{{ _server_url }}$request_uri;
 }
 
