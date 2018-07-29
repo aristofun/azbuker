@@ -35,7 +35,7 @@ Azbuker::Application.configure do
   # config.force_ssl = true
 
   # See everything in the log (default is :info)
-  config.log_level = :warn
+  config.log_level = :fatal
 
   # Use a different logger for distributed setups
   #config.logger = SyslogLogger.new
