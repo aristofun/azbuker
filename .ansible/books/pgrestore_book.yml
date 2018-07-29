@@ -20,56 +20,40 @@
         group: postgres
         recurse: yes
 
-    - name: Upload dumps from local
+    - name: Upload main dump
       copy:
-        dest: '/tmp/pgdumps/{{ item }}.bz2'
-        src: '../../tmp/pgdumps/{{ item }}.bz2'
-      with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
+        dest: '/tmp/pgdumps/{{ _host_name }}_main.bz2'
+        src: '../../tmp/pgdumps/{{ _host_name }}_main.bz2'
       when: pgdump_remote is not defined
 
-    - name: Create User
-      become_user: postgres
-      postgresql_user:
-        name: "{{ item.username }}"
-        password: "{{ item.password }}"
-        conn_limit: "{{ railsdb.default.pool|int * 5 }}"
-        role_attr_flags: LOGIN,CREATEDB,NOSUPERUSER,NOCREATEROLE,NOREPLICATION
-      with_items:
-        - '{{ railsdb.production }}'
-        - '{{ railsdb.staging }}'
+    - name: Upload ozbooks dump
+      copy:
+        dest: '/tmp/pgdumps/{{ _host_name }}_oz_books.bz2'
+        src: '../../tmp/pgdumps/{{ _host_name }}_oz_books.bz2'
+      when: (pgdump_remote is not defined) and (dump_ozbooks is defined)
 
-    - name: Create DB
+    #  issues with postgres user /var/tmp access https://github.com/ansible/ansible/issues/16048
+    - name: Restore main
       become_user: postgres
       postgresql_db:
-        name: "{{ item.database }}"
-        encoding: "{{ item.encoding }}"
-        lc_collate: "{{ item.collation }}"
-        lc_ctype: "{{ item.ctype }}"
-        template: "{{ item.template }}"
-        owner: "{{ item.username }}"
-      with_items:
-        - '{{ railsdb.production }}'
-        - '{{ railsdb.staging }}'
-
-      #  issues with postgres user /var/tmp access https://github.com/ansible/ansible/issues/16048
-    - name: Restore stage & prod databases
-      become_user: postgres
-      postgresql_db:
-        name: '{{ item }}'
+        name: '{{ railsdb.production.database }}'
         state: restore
-        target: '/tmp/pgdumps/{{ item }}.bz2'
-      with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
+        target: '/tmp/pgdumps/{{ _host_name }}_main.bz2'
+
+    - name: Restore oz_books
+      become_user: postgres
+      postgresql_db:
+        name: '{{ railsdb.production.database }}'
+        state: restore
+        target: '/tmp/pgdumps/{{ _host_name }}_oz_books.bz2'
+      when: dump_ozbooks is defined
 
     - file:
         path: '/tmp/pgdumps/{{ item }}.bz2'
         state: absent
       with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
+        - '{{ _host_name }}_main'
+        - '{{ _host_name }}_oz_books'
 
 
 # 2check

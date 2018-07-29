@@ -20,26 +20,32 @@
         group: postgres
 
 #  issues with postgres user /var/tmp access https://github.com/ansible/ansible/issues/16048
-    - name: Dump stage & prod databases
+    - name: Dump database except Oz_books
       become_user: postgres
       postgresql_db:
-        name: '{{ item }}'
+        name: '{{ railsdb.production.database }}'
         state: dump
-        target: '/tmp/pgdumps/{{ item }}.bz2'
-        target_opts: -c # clean dump with DROPs
-      with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
-#      target_opts: '-T except table | -t only table '
+        target: '/tmp/pgdumps/{{ _host_name }}_main.bz2'
+        target_opts: -c -T oz_books # clean dump with DROPs
+
+    - name: Dump database Oz_books only
+      become_user: postgres
+      postgresql_db:
+        name: '{{ railsdb.production.database }}'
+        state: dump
+        target: '/tmp/pgdumps/{{ _host_name }}_oz_books.bz2'
+        target_opts: -c -t oz_books # clean dump with DROPs
+      when: dump_ozbooks is defined
 
     - name: Download dumps locally
       fetch:
         src: '/tmp/pgdumps/{{ item }}.bz2'
         dest: '../../tmp/pgdumps/{{ item }}.bz2'
         flat: yes
+        fail_on_missing: no
       with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
+        - '{{ _host_name }}_main'
+        - '{{ _host_name }}_oz_books'
       when: pgdump_remote is not defined
 
     - name: copy files from old to new node
@@ -51,18 +57,5 @@
         path: '/tmp/pgdumps/{{ item }}.bz2'
         state: absent
       with_items:
-        - '{{ railsdb.production.database }}'
-        - '{{ railsdb.staging.database }}'
-
-# 2check
-# locally look at /tmp/dumps/
-# remotely look at /tmp/dumps/
-#
-
-# multiple nodes sudo passwords workarounds
-# https://serverfault.com/questions/560106/how-can-i-implement-ansible-with-per-host-passwords-securely
-# https://github.com/ansible/ansible/issues/15297
-
-#- import_tasks: wordpress.yml
-#  vars:
-#    wp_user: timmy
+        - '{{ _host_name }}_main'
+        - '{{ _host_name }}_oz_books'

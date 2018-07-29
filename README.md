@@ -133,8 +133,8 @@ domigrate option copies all capistrano files from current azbuker node
 Migrate data: 
 
 ```
-ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current -e "pgdump_remote=yes"
-ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l new -e "pgdump_remote=yes"
+ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current -e "pgdump_remote=yes dump_ozbooks=yes"
+ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l new -e "pgdump_remote=yes dump_ozbooks=yes"
 ```
 
 NOTE: different sudo pass on different nodes.
@@ -153,14 +153,14 @@ cap deploy:web:enable
 
 # DB backup & restore
 
-Full DB backup to local FS in `/tmp/pgdumps/<db_name>.bz2` folder:
+DB backup to local `/tmp/pgdumps/*.bz2`:
 
 ```
-ansible-playbook  .ansible/books/azbuker_pgdump_book.yml -l current|new
+ansible-playbook  .ansible/books/pgdump_book.yml -l current|new [-e "dump_ozbooks=yes"]
 ```
 
-Restore from local `/tmp/pgdumps/<db_name>.bz2` full dump:
+Restore from local `/tmp/pgdumps/*.bz2`:
 
 ```
-ansible-playbook  .ansible/books/azbuker_pgrestore_book.yml -l current|new
+ansible-playbook  .ansible/books/pgrestore_book.yml -l current|new [-e "dump_ozbooks=yes"]
 ```
