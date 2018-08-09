@@ -16,9 +16,9 @@
   - name: Create User
     become_user: postgres
     postgresql_user:
-      name: "{{ item.username }}"
+      name: "{{ item.username|default (item.user) }}"
       password: "{{ item.password }}"
-      conn_limit: "{{ item.pool|int * 5 }}"
+      conn_limit: "{{ ((item.pool|default (5))|int + 1) * 4 }}"
       role_attr_flags: LOGIN,CREATEDB,NOSUPERUSER,NOCREATEROLE,NOREPLICATION
     with_items:
       - '{{ railsdb.production }}'

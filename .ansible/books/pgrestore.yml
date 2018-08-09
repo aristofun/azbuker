@@ -55,6 +55,13 @@
         - '{{ _host_name }}_main'
         - '{{ _host_name }}_oz_books'
 
+    - name: Revert dumps folder permissions to local user
+        file:
+          path: /tmp/pgdumps/
+          state: directory
+          owner: '{{ _remote_user }}'
+          group: '{{ _remote_user }}'
+          recurse: yes
 
 # 2check
 # sudo -u postgres psql -U postgres

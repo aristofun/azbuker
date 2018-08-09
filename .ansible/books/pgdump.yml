@@ -48,6 +48,14 @@
         - '{{ _host_name }}_oz_books'
       when: pgdump_remote is not defined
 
+    - name: Set local user permissions for rsync to work
+      file:
+        path: /tmp/pgdumps/
+        state: directory
+        owner: '{{ _remote_user }}'
+        group: '{{ _remote_user }}'
+        recurse: yes
+
     - name: copy files from old to new node
       become: false
       shell: 'rsync -qrpt --delete --compress -e "ssh -o StrictHostKeyChecking=no" /tmp/pgdumps/ {{ groups["new"][0] }}:/tmp/pgdumps/'

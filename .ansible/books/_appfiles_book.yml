@@ -42,7 +42,7 @@
         dest: '{{ _apps_path }}/{{ _host_name }}/shared/config/'
 
     - name: setup capistrano folder
-      local_action: command bundle exec cap deploy:setup cap_host={{ groups["new"][0] }}
+      local_action: command bundle exec cap production deploy:setup cap_host={{ groups["new"][0] }}
 
     - name: Copy system uploads
       shell: 'rsync -qrpt --delete --compress -e "ssh -o StrictHostKeyChecking=no" {{ groups["current"][0] }}:{{ _old_apps_path }}/{{ _host_name }}/shared/system {{ _apps_path }}/{{ _host_name }}/shared/'
