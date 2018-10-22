@@ -43,6 +43,7 @@
 
     - name: setup capistrano folder
       local_action: command bundle exec cap production deploy:setup cap_host={{ groups["new"][0] }}
+      when: domigrate is defined
 
     - name: Copy system uploads
       shell: 'rsync -qrpt --delete --compress -e "ssh -o StrictHostKeyChecking=no" {{ groups["current"][0] }}:{{ _old_apps_path }}/{{ _host_name }}/shared/system {{ _apps_path }}/{{ _host_name }}/shared/'
@@ -52,14 +53,14 @@
       become: true
       template:
         src: ../templates/nginx/app_virtualhost.conf.j2
-        dest: /etc/nginx/sites-available/10_{{ _host_name }}.conf
+        dest: /etc/nginx/sites-available/30_{{ _host_name }}.conf
       notify: restart nginx
 
     - name: Ensure virtual host is enabled
       become: true
       file:
-        src: /etc/nginx/sites-available/10_{{ _host_name }}.conf
-        dest: /etc/nginx/sites-enabled/10_{{ _host_name }}.conf
+        src: /etc/nginx/sites-available/30_{{ _host_name }}.conf
+        dest: /etc/nginx/sites-enabled/30_{{ _host_name }}.conf
         state: link
       notify: restart nginx
 
