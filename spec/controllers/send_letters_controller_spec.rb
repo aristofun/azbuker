@@ -4,9 +4,9 @@ require 'spec_helper'
 describe SendLettersController do
 
   before :each do
-    @user = FactoryGirl.create(:user)
-    book = FactoryGirl.create(:book)
-    @lot = FactoryGirl.create(:lot, :book => book)
+    @user = FactoryBot.create(:user)
+    book = FactoryBot.create(:book)
+    @lot = FactoryBot.create(:lot, :book => book)
     @user_messaga = {
         :email => 'mymail@azbuker.ru',
         :text => 'Fuuck yo uuuu!',

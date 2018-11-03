@@ -4,25 +4,24 @@ require 'spec_helper'
 
 describe BooksController do
   include ApplicationHelper
+  let(:user) { FactoryBot.create(:user) }
 
   describe 'Logged in' do
     before(:each) do
-      @user = FactoryGirl.create(:user)
-      @user.confirm!
-      sign_in @user
+      sign_in user
     end
 
     it 'app helpers check ' do
-      ru_debug(@user).should_not be_blank
+      ru_debug(user).should_not be_blank
     end
 
     it 'should suggest oz_books first if exist' do
-      book1 = FactoryGirl.create(:book_w_author, :title => 'ВинограднЫй мозго слизень')
-      book2 = FactoryGirl.create(:book_w_author, :title => 'Виноград мозг')
-      ozbook1 = FactoryGirl.create(:oz_book, :title => 'Виногр мозг')
-      ozbook2 = FactoryGirl.create(:oz_book, :title => 'Виногр омзад')
-      ozbook3 = FactoryGirl.create(:oz_book, :title => 'Виногр омза дерко')
-      ozbook4 = FactoryGirl.create(:oz_book, :title => 'Виногр омзад ры')
+      book1 = FactoryBot.create(:book_w_author, :title => 'ВинограднЫй мозго слизень')
+      book2 = FactoryBot.create(:book_w_author, :title => 'Виноград мозг')
+      ozbook1 = FactoryBot.create(:oz_book, :title => 'Виногр мозг')
+      ozbook2 = FactoryBot.create(:oz_book, :title => 'Виногр омзад')
+      ozbook3 = FactoryBot.create(:oz_book, :title => 'Виногр омза дерко')
+      ozbook4 = FactoryBot.create(:oz_book, :title => 'Виногр омзад ры')
 
       post :suggest, {:title => 'виногр', :authors => '', :format => :js}
       assigns(:books).should == [ozbook1, ozbook2, ozbook4, ozbook3, book2, book1]
@@ -35,15 +34,15 @@ describe BooksController do
     end
 
     it 'should retrieve correct book by title&authorname' do
-      author1 = FactoryGirl.create(:author, :last => 'Иванов', :first => 'Михаил')
-      author2 = FactoryGirl.create(:author, :last => 'Петров')
-      author3 = FactoryGirl.create(:author, :last => 'Сидоров', :first => 'Иван',
+      author1 = FactoryBot.create(:author, :last => 'Иванов', :first => 'Михаил')
+      author2 = FactoryBot.create(:author, :last => 'Петров')
+      author3 = FactoryBot.create(:author, :last => 'Сидоров', :first => 'Иван',
                                    :middle => 'Сергеич')
-      book1 = FactoryGirl.create(:book_w_author, :title => '%ВинограднЫй мозг наполеона')
-      book2 = FactoryGirl.create(:book_w_author, :title => 'Виноград мозг')
-      book3 = FactoryGirl.create(:book, :title => '%ВинограднЫй мозг', :authors => [author1])
-      book4 = FactoryGirl.create(:book, :title => 'виногрАдарь', :authors => [author1, author2])
-      book5 = FactoryGirl.create(:book, :title => 'Виноградная лоза', :authors => [author2,
+      book1 = FactoryBot.create(:book_w_author, :title => '%ВинограднЫй мозг наполеона')
+      book2 = FactoryBot.create(:book_w_author, :title => 'Виноград мозг')
+      book3 = FactoryBot.create(:book, :title => '%ВинограднЫй мозг', :authors => [author1])
+      book4 = FactoryBot.create(:book, :title => 'виногрАдарь', :authors => [author1, author2])
+      book5 = FactoryBot.create(:book, :title => 'Виноградная лоза', :authors => [author2,
                                                                                    author3])
 
       post :suggest, {:title => 'виноград', :authors => '', :format => :js}
@@ -80,22 +79,21 @@ describe BooksController do
   end
 
   it 'should do correct search' do
-    @user1 = FactoryGirl.create(:user)
-    @author1 = FactoryGirl.create(:author, :last => 'Борменталь')
-    @author2 = FactoryGirl.create(:author, :last => 'Эле-Менталь')
-    @book1 = FactoryGirl.create(:book, :authors => [@author1], :title => 'Как говорить, чтобы дети слушали. И как слушать, чтобы дети говорили.')
-    @book2 = FactoryGirl.create(:book, :authors => [@author2], :title => 'Генератор новых клиентов инструмент')
-    @book12 = FactoryGirl.create(:book, :authors => [@author2, @author1],
+    @author1 = FactoryBot.create(:author, :last => 'Борменталь')
+    @author2 = FactoryBot.create(:author, :last => 'Эле-Менталь')
+    @book1 = FactoryBot.create(:book, :authors => [@author1], :title => 'Как говорить, чтобы дети слушали. И как слушать, чтобы дети говорили.')
+    @book2 = FactoryBot.create(:book, :authors => [@author2], :title => 'Генератор новых клиентов инструмент')
+    @book12 = FactoryBot.create(:book, :authors => [@author2, @author1],
                                  :title => '7 навыков высокоэффективных людей. Мощные инструменты развития личности')
-    @book11 = FactoryGirl.create(:book, :authors => [@author1], :title => 'Внутри торнадо')
-    @book22 = FactoryGirl.create(:book, :authors => [@author2], :title => 'Как завоевывать друзей  и оказывать влияние на людей')
+    @book11 = FactoryBot.create(:book, :authors => [@author1], :title => 'Внутри торнадо')
+    @book22 = FactoryBot.create(:book, :authors => [@author2], :title => 'Как завоевывать друзей  и оказывать влияние на людей')
 
     10.times do
-      FactoryGirl.create(:lot, :book_id => @book1.id, :user_id => @user1.id)
-      FactoryGirl.create(:lot, :book_id => @book2.id, :user_id => @user1.id)
-      FactoryGirl.create(:lot, :book_id => @book12.id, :user_id => @user1.id)
-      FactoryGirl.create(:lot, :book_id => @book11.id, :user_id => @user1.id)
-      FactoryGirl.create(:lot, :book_id => @book22.id, :user_id => @user1.id)
+      FactoryBot.create(:lot, :book_id => @book1.id, :user_id => user.id)
+      FactoryBot.create(:lot, :book_id => @book2.id, :user_id => user.id)
+      FactoryBot.create(:lot, :book_id => @book12.id, :user_id => user.id)
+      FactoryBot.create(:lot, :book_id => @book11.id, :user_id => user.id)
+      FactoryBot.create(:lot, :book_id => @book22.id, :user_id => user.id)
     end
 
     get :search, {:q => 'Marginal'}

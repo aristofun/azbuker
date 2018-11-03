@@ -1,6 +1,6 @@
 # coding: utf-8
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :book do
     sequence(:title) { |n| n % 3 == 0 ? "Roman indle-#{n%31}"
         : "#{%w(А Б И К В Г О Е).sample}оман в чашу-#{n%31}" }
@@ -16,8 +16,7 @@ FactoryGirl.define do
 
   factory :book_w_author, :parent => :book do |book|
     book.after(:create) { |b|
-      FactoryGirl.create(:author, :books => [b])
+      FactoryBot.create(:author, :books => [b])
     }
   end
 end
-

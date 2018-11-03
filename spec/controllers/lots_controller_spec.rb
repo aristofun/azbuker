@@ -6,7 +6,7 @@ describe LotsController do
   #render_views
 
   def lot_attr(authors, book, ozon_coverid = nil)
-    FactoryGirl.attributes_for(:lot,
+    FactoryBot.attributes_for(:lot,
                                :skypename => "bugaga",
                                :cityid => @user.cityid,
                                :book_title => book[:title],
@@ -21,7 +21,7 @@ describe LotsController do
   #render_views
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm!
     sign_in @user
   end
@@ -29,8 +29,8 @@ describe LotsController do
   describe "GET index_*" do
     it "index_book redirects if the only lot in current city" do
       config1
-      book = FactoryGirl.create(:book_w_author)
-      lot = FactoryGirl.create(:lot, :book_id => book.id, :user_id => @user2.id, :cityid => 4)
+      book = FactoryBot.create(:book_w_author)
+      lot = FactoryBot.create(:lot, :book_id => book.id, :user_id => @user2.id, :cityid => 4)
 
       get :index_book, {:bookid => book.id, :cityid => 2}
       response.should render_template 'book'
@@ -41,7 +41,7 @@ describe LotsController do
       response.should redirect_to lot_path(lot)
       response.status.should == 302
 
-      lot_any = FactoryGirl.create(:lot, :book_id => book.id, :user_id => @user2.id, :cityid => -1)
+      lot_any = FactoryBot.create(:lot, :book_id => book.id, :user_id => @user2.id, :cityid => -1)
       get :index_book, {:bookid => book.id, :cityid => 4}
       response.should render_template 'book'
       assigns(:lots).should == [lot_any, lot]
@@ -58,8 +58,8 @@ describe LotsController do
       config1
       sign_out @user
 
-      buk = FactoryGirl.create(:book, :authors => [@books[3].authors[0]])
-      FactoryGirl.create(:lot, :book_id => buk.id)
+      buk = FactoryBot.create(:book, :authors => [@books[3].authors[0]])
+      FactoryBot.create(:lot, :book_id => buk.id)
 
       get :index_book, {:bookid => @books[3].id}
       response.should render_template 'book'
@@ -111,9 +111,9 @@ describe LotsController do
     describe "with valid params" do
 
       it "creates a new Lot with book" do
-        book = FactoryGirl.attributes_for(:book)
-        author1 = FactoryGirl.attributes_for(:author)
-        author2 = FactoryGirl.attributes_for(:author)
+        book = FactoryBot.attributes_for(:book)
+        author1 = FactoryBot.attributes_for(:author)
+        author2 = FactoryBot.attributes_for(:author)
 
         lattr = lot_attr(
             "#{author1[:first]} #{author1[:middle]} #{author1[:last]},
@@ -158,12 +158,12 @@ describe LotsController do
       end
 
       it "creates a new Lot for existing book" do
-        author1 = FactoryGirl.create(:author)
-        author2 = FactoryGirl.create(:author)
-        book = FactoryGirl.create(:book, :ozon_coverid => nil, :authors => [author1, author2])
+        author1 = FactoryBot.create(:author)
+        author2 = FactoryBot.create(:author)
+        book = FactoryBot.create(:book, :ozon_coverid => nil, :authors => [author1, author2])
         book.authors.count.should == 2
-        book2 = FactoryGirl.create(:book, :title => book.title, :authors => [author1])
-        book3 = FactoryGirl.create(:book, :title => book.title, :authors => [author2])
+        book2 = FactoryBot.create(:book, :title => book.title, :authors => [author1])
+        book3 = FactoryBot.create(:book, :title => book.title, :authors => [author2])
 
         # try to update genre of existing book
         book.genre += 1
@@ -196,7 +196,7 @@ describe LotsController do
       end
 
       it "assings default cover URL" do
-        book_empty_author = FactoryGirl.create(:book)
+        book_empty_author = FactoryBot.create(:book)
 
         lattr = lot_attr("", book_empty_author)
         lattr.delete(:cover)
@@ -216,9 +216,9 @@ describe LotsController do
       end
 
       it "creates new Lot for definite bookid" do
-        book1 = FactoryGirl.create(:book)
-        book2 = FactoryGirl.create(:book)
-        author1 = FactoryGirl.create(:author)
+        book1 = FactoryBot.create(:book)
+        book2 = FactoryBot.create(:book)
+        author1 = FactoryBot.create(:author)
         book1.authors << author1
         book2.authors << author1
         book1.save
@@ -247,7 +247,7 @@ describe LotsController do
         lot.book.ozon_coverid.should == '7934'
         lot.book.get_cover('300').should_not == lot.cover.url(:x300)
 
-        ozbook = FactoryGirl.create(:oz_book)
+        ozbook = FactoryBot.create(:oz_book)
         lattr = lot_attr("#{author1.short}Uj", book1, 734).merge({:bookid => ozbook.id,
                                                                   :ozon_flag => ozbook.id, :ozonid => 7})
 
@@ -272,7 +272,7 @@ describe LotsController do
         @user.skypename = nil
         @user.save
 
-        book = FactoryGirl.create(:book)
+        book = FactoryBot.create(:book)
         lattr = lot_attr("", book).merge({
                                              :skypename => "rspecskyp",
                                              :phone => "495 444 55 66",
@@ -292,7 +292,7 @@ describe LotsController do
       end
 
       it "don't updates user contact_info" do
-        book = FactoryGirl.create(:book)
+        book = FactoryBot.create(:book)
         old_city = @user.cityid
         old_skype = @user.skypename
         old_phone = @user.phone
@@ -325,7 +325,7 @@ describe LotsController do
       it "show :new form for Lot w/o price OR book_title" do
         # Trigger the behavior that occurs when invalid params are submitted
         #Lot.any_instance.stub(:save).and_return(false)
-        book = FactoryGirl.attributes_for(:book)
+        book = FactoryBot.attributes_for(:book)
         lattr = lot_attr("   Пушкин", book).merge({:book_title => ""})
         expect {
           expect {
@@ -361,7 +361,7 @@ describe LotsController do
 
       it "redirects anonymus" do
         sign_out @user
-        book = FactoryGirl.create(:book)
+        book = FactoryBot.create(:book)
         expect do
           post :create, :lot => lot_attr("", book)
         end.to_not change(Lot, :count)
@@ -376,14 +376,14 @@ describe LotsController do
 
   describe "GET show" do
     it "assigns the requested lot as @lot" do
-      book = FactoryGirl.create(:book_w_author)
-      lot = FactoryGirl.create(:lot, :book => book)
-      lot2 = FactoryGirl.create(:lot, :book => book, :cityid => lot.cityid,
+      book = FactoryBot.create(:book_w_author)
+      lot = FactoryBot.create(:lot, :book => book)
+      lot2 = FactoryBot.create(:lot, :book => book, :cityid => lot.cityid,
                                 :user_id => lot.user_id + 1)
 
       sleep 0.1
 
-      lot3 = FactoryGirl.create(:lot, :book => book, :cityid => -1,
+      lot3 = FactoryBot.create(:lot, :book => book, :cityid => -1,
                                 :user_id => lot.user_id + 2)
 
       get :show, {:id => lot.to_param}
@@ -396,7 +396,7 @@ describe LotsController do
   describe "GET edit" do
 
     it "can't edit alien Lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+      lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
 
       get :edit, {:id => lot.to_param}
       response.should redirect_to show_user_path(@user)
@@ -404,7 +404,7 @@ describe LotsController do
     end
 
     it "only admin can edit alien Lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+      lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
       @user.update_column(:admin, true)
 
       get :edit, {:id => lot.to_param}
@@ -415,7 +415,7 @@ describe LotsController do
     end
 
     it "assigns the requested lot as @lot" do
-      lot = FactoryGirl.create(:lot, :user => @user)
+      lot = FactoryBot.create(:lot, :user => @user)
       get :edit, {:id => lot.to_param}
       assigns(:lot).should eq(lot)
       response.should be_success
@@ -425,7 +425,7 @@ describe LotsController do
   describe "UPDATE" do
     describe "with valid params" do
       it "updates the requested lot" do
-        lot = FactoryGirl.create(:lot, :price => 7, :can_deliver => true,
+        lot = FactoryBot.create(:lot, :price => 7, :can_deliver => true,
                                  :can_postmail => true,
                                  :user_id => @user.id)
         attr = lot.attributes.freeze
@@ -452,14 +452,14 @@ describe LotsController do
       end
 
       it "can't update alien Lot" do
-        lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+        lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
         put :update, {:id => lot.to_param, :lot => {:can_deliver => false, :price => 10}}
         response.should redirect_to show_user_path(@user)
       end
 
       it "only admin can update any Lot" do
-        user = FactoryGirl.create(:user)
-        lot = FactoryGirl.create(:lot, :user => user, :phone => '492 111 22 33',
+        user = FactoryBot.create(:user)
+        lot = FactoryBot.create(:lot, :user => user, :phone => '492 111 22 33',
                                  :skypename => '2222')
         @user.update_column(:admin, true)
 
@@ -482,7 +482,7 @@ describe LotsController do
 
     describe "with invalid params" do
       it "re-renders the 'edit' template" do
-        lot = FactoryGirl.create(:lot, :user_id => @user.id)
+        lot = FactoryBot.create(:lot, :user_id => @user.id)
         put :update, {:id => lot.to_param, :lot => {:price => -1}}
         response.should render_template("edit")
         Lot.find(lot.id).price.should > -1
@@ -493,21 +493,21 @@ describe LotsController do
   describe "DELETE & close" do
 
     it "close own lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id)
+      lot = FactoryBot.create(:lot, :user_id => @user.id)
       put :close, {:id => lot.id}
       response.should redirect_to lot
       Lot.find(lot.id).is_active.should be_falsey
     end
 
     it "can't close alien lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+      lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
       put :close, {:id => lot.id}
       response.should redirect_to show_user_path(@user)
       Lot.find(lot.id).is_active.should be_truthy
     end
 
     it "can't delete any lot" do
-      lot = FactoryGirl.create(:lot, :user => @user)
+      lot = FactoryBot.create(:lot, :user => @user)
       expect {
         delete :destroy, {:id => lot.to_param}
       }.to change(Lot, :count).by(0)
@@ -516,7 +516,7 @@ describe LotsController do
     end
 
     it "Admin can delete any lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+      lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
       @user.update_column(:admin, true)
       expect {
         delete :destroy, {:id => lot.id}
@@ -526,7 +526,7 @@ describe LotsController do
     end
 
     it "Admin can close any lot" do
-      lot = FactoryGirl.create(:lot, :user_id => @user.id + 1)
+      lot = FactoryBot.create(:lot, :user_id => @user.id + 1)
       @user.update_column(:admin, true)
       put :close, {:id => lot.id}
       response.should redirect_to lot

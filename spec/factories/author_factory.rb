@@ -1,7 +1,4 @@
-# coding: utf-8
-# Read about factories at http://github.com/thoughtbot/factory_girl
-
-FactoryGirl.define do
+FactoryBot.define do
   factory :author do
     sequence(:first) { |n| "Александр#{n}й" }
     sequence(:middle) { |n| "Сэрг#{"е"*n}вич" }

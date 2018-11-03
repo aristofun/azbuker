@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :lot do
     user_id 1
     book_id 1
