@@ -38,6 +38,8 @@ group :test, :development do
   gem 'net-ssh', '~> 4.2'
   gem 'capistrano-rbenv', '~> 1.0'
 
+  gem 'byebug', '~> 9.0', '>= 9.0.6'
+
   gem 'terminal-notifier-guard'
   gem 'rb-fsevent', :platforms => [:ruby]
 
