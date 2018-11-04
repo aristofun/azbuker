@@ -169,6 +169,8 @@ describe "Users" do
   describe "sing_in" do
     it "should not sign UNCONFIRMED user & show resend link" do
       user = FactoryBot.create(:user)
+      user.confirmed_at = nil
+      user.save
       login(user, user_session_path, false).should be_false
 
       page.current_path.should == user_session_path
