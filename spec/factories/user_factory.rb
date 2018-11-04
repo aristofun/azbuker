@@ -13,6 +13,9 @@ FactoryBot.define do
     after(:create) do |user|
       user.confirm!
     end
+    trait :admin do
+      admin true
+    end
   end
 end
 
