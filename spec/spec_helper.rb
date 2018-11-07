@@ -17,7 +17,7 @@ require 'paperclip/matchers'
 require 'lots_populator'
 
 #require 'factory_girl_rails'   look next line
-#FactoryGirl.find_definitions  # can help if rake don't find factories
+#FactoryBot.find_definitions  # can help if rake don't find factories
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

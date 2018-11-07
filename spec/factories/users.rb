@@ -1,7 +1,7 @@
 # coding: utf-8
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     #name { |n| "Ivan #{n}-й" }
     sequence(:email) { |n| "test#{n}@azbooker.ru" }

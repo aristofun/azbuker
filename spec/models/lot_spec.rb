@@ -15,7 +15,7 @@ describe Lot do
 
     it "should Use correct cover uploaded" do
       lambda do
-        lt = FactoryGirl.create(:lot,
+        lt = FactoryBot.create(:lot,
                                 :cover => Rails.root.join("spec/fixtures/no_resize_original.png")
                                 .open)
         lt.should be_valid
@@ -33,20 +33,20 @@ describe Lot do
 
     it "should reject wrong filesize&type&dimensions" do
       lambda do
-        lt = FactoryGirl.build(:lot, :cover => Rails.root.join("spec/factories/lots.rb").open)
+        lt = FactoryBot.build(:lot, :cover => Rails.root.join("spec/factories/lots.rb").open)
         lt.should_not be_valid
         lt.errors.get(:cover_content_type).should_not be_empty
 
-        lt = FactoryGirl.build(:lot, :cover => Rails.root.join("spec/fixtures/huge_picture.jpg").open)
+        lt = FactoryBot.build(:lot, :cover => Rails.root.join("spec/fixtures/huge_picture.jpg").open)
         lt.should_not be_valid
         lt.errors.get(:cover_file_size).should_not be_empty
 
-        lt = FactoryGirl.build(:lot, :cover => Rails.root.join("spec/fixtures/too_small_dimensions.tiff").open)
+        lt = FactoryBot.build(:lot, :cover => Rails.root.join("spec/fixtures/too_small_dimensions.tiff").open)
         #puts lt.errors.inspect
         lt.should_not be_valid
         lt.errors.get(:cover).should_not be_empty
 
-        lt = FactoryGirl.create(:lot,:cover => Rails.root.join("spec/fixtures/almost_huge.jpg").open)
+        lt = FactoryBot.create(:lot,:cover => Rails.root.join("spec/fixtures/almost_huge.jpg").open)
         lt.should be_valid
       end.should change(Lot, :count).by(1)
     end
@@ -54,7 +54,7 @@ describe Lot do
     it "should do correct resize" do
       cover = Rails.root.join("spec/fixtures/no_resize_original.png").open
       dims = dimensions(cover)
-      lt = FactoryGirl.create(:lot, :cover => cover)
+      lt = FactoryBot.create(:lot, :cover => cover)
       dimensions(lt.cover).to_s.should == dims.to_s
       dimensions(lt.cover.path(:x300)).to_s.should == "200x300"
       dimensions(lt.cover.path(:x200)).to_s.should == "200x200"
@@ -62,7 +62,7 @@ describe Lot do
 
       cover2 = Rails.root.join("spec/fixtures/minimal_dimensions.gif").open
       dims = dimensions(cover2)
-      lt2 = FactoryGirl.create(:lot, :cover => cover2)
+      lt2 = FactoryBot.create(:lot, :cover => cover2)
       dimensions(lt2.cover).to_s.should == dims.to_s
       dimensions(lt2.cover.path(:x300)).to_s.should == "200x300"
       dimensions(lt2.cover.path(:x200)).to_s.should == "200x200"
@@ -70,7 +70,7 @@ describe Lot do
     end
 
     it "should Use default cover urls if no file uploaded" do
-      lt = FactoryGirl.create(:lot)
+      lt = FactoryBot.create(:lot)
       lt.should be_valid
       lt.cover.url.should == "/covers/missing_original.png"
       lt.cover.url(:x300).should == "/covers/missing_x300.png"
@@ -81,13 +81,13 @@ describe Lot do
   describe "creation" do
     it "should create good lots" do
       auth = Author.from_string("  \tГлеб    Архангельский ")
-      book = FactoryGirl.create(:book)
+      book = FactoryBot.create(:book)
       book.authors << auth
       book.save
-      usr = FactoryGirl.create(:user)
+      usr = FactoryBot.create(:user)
 
       lambda do
-        lot = FactoryGirl.create(:lot, :book => book, :price => 120, :can_deliver => true,
+        lot = FactoryBot.create(:lot, :book => book, :price => 120, :can_deliver => true,
                                  :can_postmail => false,
                                  :comment => "Привет пацаны!", :user => usr)
         lot.should be_valid
@@ -102,10 +102,10 @@ describe Lot do
     end
 
     it "should update phone&skype&city if differ" do
-      book = FactoryGirl.create(:book_w_author)
-      user = FactoryGirl.create(:user)
+      book = FactoryBot.create(:book_w_author)
+      user = FactoryBot.create(:user)
 
-      lot2 = FactoryGirl.create(:lot, :book_id => book.id, :user_id => user.id,
+      lot2 = FactoryBot.create(:lot, :book_id => book.id, :user_id => user.id,
                                 :skypename => "some_skype", :phone => "495 777 5588", :cityid => 567)
       lot2.read_attribute(:skypename).should == "some_skype"
       lot2.skypename.should == "some_skype"
@@ -116,10 +116,10 @@ describe Lot do
     end
 
     it "should inherit phone&skype&city from user" do
-      book = FactoryGirl.create(:book_w_author)
-      user = FactoryGirl.create(:user)
+      book = FactoryBot.create(:book_w_author)
+      user = FactoryBot.create(:user)
 
-      lot = FactoryGirl.create(:lot, :book_id => book.id, :user_id => user.id)
+      lot = FactoryBot.create(:lot, :book_id => book.id, :user_id => user.id)
       lot.read_attribute(:phone).should be_blank
       lot.read_attribute(:skypename).should be_blank
       lot.phone.should == user.phone
@@ -130,19 +130,19 @@ describe Lot do
 
   describe "cache counter updates" do
     it "should update Book.min_price" do
-      book = FactoryGirl.create(:book_w_author)
+      book = FactoryBot.create(:book_w_author)
       book.min_price.should == 0 # default value
 
-      lot1 = FactoryGirl.create(:lot, :book_id => book.id, :price => 17)
+      lot1 = FactoryBot.create(:lot, :book_id => book.id, :price => 17)
       book.reload
       book.min_price.should == 17
 
-      lot2 = FactoryGirl.create(:lot, :book_id => book.id, :price => 4)
+      lot2 = FactoryBot.create(:lot, :book_id => book.id, :price => 4)
       book.reload
       book.min_price.should == 4
 
-      lot3 = FactoryGirl.create(:lot, :book_id => book.id, :price => 0)
-      lot4 = FactoryGirl.create(:lot, :book_id => book.id, :price => 2)
+      lot3 = FactoryBot.create(:lot, :book_id => book.id, :price => 0)
+      lot4 = FactoryBot.create(:lot, :book_id => book.id, :price => 2)
 
       book.reload
       book.min_price.should == 0
@@ -170,16 +170,16 @@ describe Lot do
     end
 
     it "should increment/decrement Book.lots_count" do
-      book = FactoryGirl.create(:book_w_author)
+      book = FactoryBot.create(:book_w_author)
       book.lots_count.should == 0
 
-      lot = FactoryGirl.create(:lot, :book_id => book.id)
+      lot = FactoryBot.create(:lot, :book_id => book.id)
       book.reload
       book.lots.should == [lot]
       book.lots_count.should == 1
 
       22.times do
-        book.lots << FactoryGirl.create(:lot, :book_id => book.id)
+        book.lots << FactoryBot.create(:lot, :book_id => book.id)
       end
       book.reload
       book.lots.count.should == 23
@@ -232,7 +232,7 @@ describe Lot do
 
       book.lots.map(&:destroy)
 
-      nlot = FactoryGirl.create(:lot)
+      nlot = FactoryBot.create(:lot)
       nlot.is_active = false
       nlot.book_id = book.id
       nlot.save

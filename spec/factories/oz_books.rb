@@ -1,6 +1,6 @@
 # coding: utf-8
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :oz_book do
     sequence(:title) { |n| n % 3 == 0 ? "Roman indle-#{n%31}"
     : "#{%w(А Б И К В Г О Е).sample}оман в чашу-#{n%31}" }

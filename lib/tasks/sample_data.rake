@@ -20,17 +20,17 @@ namespace :db do
     puts "Creating #{num_users} users..."
     all_users = []
     num_users.times do
-      usr = FactoryGirl.create(:user, :confirmed_at => 1.second.ago)
+      usr = FactoryBot.create(:user, :confirmed_at => 1.second.ago)
       all_users << usr
       print " usr:#{usr.id},"
     end
 
     puts "\nCreating #{num_authors} authors w. #{books_per_author} b/author..."
     num_authors.times do
-      author = FactoryGirl.create(:author)
+      author = FactoryBot.create(:author)
       print "#{author.id},"
       books_per_author.times do
-        FactoryGirl.create(:book, :authors => [author])
+        FactoryBot.create(:book, :authors => [author])
       end
     end
 
@@ -39,7 +39,7 @@ namespace :db do
     Book.all.each do |book|
       print " [book:#{book.id}, author:#{book.authors[0].id}], "
       lots_per_book.times do
-        FactoryGirl.create(:lot, :user => all_users[rand(num_users)], :book => book)
+        FactoryBot.create(:lot, :user => all_users[rand(num_users)], :book => book)
       end
     end
 

@@ -101,10 +101,10 @@ GEM
       railties (>= 3.2, < 6.0)
     erubis (2.7.0)
     execjs (2.7.0)
-    factory_girl (4.9.0)
+    factory_bot (4.11.1)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
+    factory_bot_rails (4.11.1)
+      factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
     faker (1.9.1)
       i18n (>= 0.7)
@@ -347,7 +347,7 @@ DEPENDENCIES
   cssminify
   devise (~> 2.0)
   dotenv-rails
-  factory_girl_rails (~> 4.3)
+  factory_bot_rails
   faker (~> 1.2)
   faster_require
   formtastic (~> 2.2)
@@ -383,4 +383,4 @@ DEPENDENCIES
   ya2yaml
 
 BUNDLED WITH
-   1.16.3
+   1.17.1

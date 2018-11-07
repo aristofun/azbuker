@@ -22,7 +22,7 @@ describe "Users" do
     end
 
     it "should allow admin users" do
-      user = FactoryGirl.create(:user, :admin => true)
+      user = FactoryBot.create(:user, :admin => true)
       login(user).should be_true
       config1
 
@@ -41,7 +41,7 @@ describe "Users" do
     end
 
     it "should decline non-admin users" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       login(user).should be_true
 
       visit odminko_dashboard_path
@@ -60,7 +60,7 @@ describe "Users" do
   describe "GET 'edit'" do
 
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
       login(@user).should be_true
     end
 
@@ -78,7 +78,7 @@ describe "Users" do
       old_skype = "skype_gAt.rr"
       old_city = @user.cityid
 
-      usr = FactoryGirl.create(:user, :phone => old_phone, :nickname => old_nick,
+      usr = FactoryBot.create(:user, :phone => old_phone, :nickname => old_nick,
                                :skypename => old_skype, :cityid => old_city)
 
       logout(@user)
@@ -168,7 +168,7 @@ describe "Users" do
 
   describe "sing_in" do
     it "should not sign UNCONFIRMED user & show resend link" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       login(user, user_session_path, false).should be_false
 
       page.current_path.should == user_session_path
