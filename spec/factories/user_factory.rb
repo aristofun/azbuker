@@ -10,6 +10,14 @@ FactoryBot.define do
     sequence(:cityid) { |n| (n % 15) - 1 }
     sequence(:phone) { |n| "578 998-35-5#{n}" }
     agreement "1"
+    
+    after(:create) do |user|
+      user.confirm!
+    end
+
+    trait :admin do
+      admin true
+    end
   end
 end
 
