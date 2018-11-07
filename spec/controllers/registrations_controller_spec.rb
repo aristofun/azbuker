@@ -3,10 +3,10 @@ require 'spec_helper'
 describe RegistrationsController, :type => :controller do
 
   before(:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
 
     10.times do
-      FactoryGirl.create(:lot, :book => FactoryGirl.create(:book_w_author), :user => @user)
+      FactoryBot.create(:lot, :book => FactoryBot.create(:book_w_author), :user => @user)
     end
     request.env['devise.mapping'] = Devise.mappings[:user]
   end
