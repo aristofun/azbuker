@@ -10,7 +10,7 @@ describe "Lots" do
       visit new_lot_path # not logged in
       page.current_path.should == new_user_session_path
 
-      login(FactoryGirl.create(:user)) # redirect back after login
+      login(FactoryBot.create(:user)) # redirect back after login
       page.current_path.should == new_lot_path
 
       page.should have_xpath("//form[@id='new_lot'][@action='#{lots_path}']", :count => 1)

@@ -4,11 +4,11 @@ require 'spec_helper'
 describe Book do
 
   it "should get correct other books" do
-    book1 = FactoryGirl.create(:book_w_author, :title => 'mein kampf')
+    book1 = FactoryBot.create(:book_w_author, :title => 'mein kampf')
     auth1 = book1.authors[0]
-    auth2 = FactoryGirl.create(:author)
-    book2 = FactoryGirl.create(:book, :authors => [auth2], :title => 'mein kampf')
-    book3 = FactoryGirl.create(:book, :authors => [auth2, auth1], :title => 'mein kampf')
+    auth2 = FactoryBot.create(:author)
+    book2 = FactoryBot.create(:book, :authors => [auth2], :title => 'mein kampf')
+    book3 = FactoryBot.create(:book, :authors => [auth2, auth1], :title => 'mein kampf')
 
     Book.count.should == 3
     Author.count.should == 2
@@ -23,13 +23,13 @@ describe Book do
   end
 
   it "should get correst coverpath value" do
-    book = FactoryGirl.create(:book) # with ozon_coverid
+    book = FactoryBot.create(:book) # with ozon_coverid
     book.get_cover.should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
     book.get_cover(:x300).should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
     book.get_cover(:x200).should == "http://static.ozone.ru/multimedia/books_covers/c200/#{book.ozon_coverid}.jpg"
     book.get_cover(:x120).should == "http://static.ozone.ru/multimedia/books_covers/c120/#{book.ozon_coverid}.jpg"
 
-    book2 = FactoryGirl.create(:book, :ozon_coverid => nil, :coverpath_x300 => "path300.jpg",
+    book2 = FactoryBot.create(:book, :ozon_coverid => nil, :coverpath_x300 => "path300.jpg",
                                :coverpath_x120 => nil)
                                      #puts book2.inspect
     book2.get_cover.should == "path300.jpg"
@@ -41,29 +41,29 @@ describe Book do
 
   it "should create valid object" do
     lambda do
-      FactoryGirl.create(:book, :title => "Ж"*255).should be_valid
-      FactoryGirl.build(:book, :title => "Ж"*256).should_not be_valid
-      FactoryGirl.create(:book, :title => "Ж"*1).should be_valid
-      FactoryGirl.build(:book, :title => " \t \n  ").should_not be_valid
-      FactoryGirl.create(:book, :title => "Ж"*1, :genre => 7).should be_valid
-      FactoryGirl.build(:book, :title => " Пук", :genre => 8).should_not be_valid
+      FactoryBot.create(:book, :title => "Ж"*255).should be_valid
+      FactoryBot.build(:book, :title => "Ж"*256).should_not be_valid
+      FactoryBot.create(:book, :title => "Ж"*1).should be_valid
+      FactoryBot.build(:book, :title => " \t \n  ").should_not be_valid
+      FactoryBot.create(:book, :title => "Ж"*1, :genre => 7).should be_valid
+      FactoryBot.build(:book, :title => " Пук", :genre => 8).should_not be_valid
     end.should change(Book, :count).by(3)
   end
 
   it "should create correct author-book id link" do
     lambda do
-      book0 = FactoryGirl.create(:book)
+      book0 = FactoryBot.create(:book)
       book0.should be_valid
       book0.authors.should == []
       book0.genre.should >= -1
 
-      book = FactoryGirl.create(:book_w_author, :genre => 2)
+      book = FactoryBot.create(:book_w_author, :genre => 2)
       book.should be_valid
       book.authors.length.should == 1
       book.genre.should == 2
 
-      auth = FactoryGirl.create(:author)
-      book2 = FactoryGirl.create(:book, :authors => [auth])
+      auth = FactoryBot.create(:author)
+      book2 = FactoryBot.create(:book, :authors => [auth])
       auth.books.should == [book2]
       book2.authors.should == [auth]
 
@@ -75,7 +75,7 @@ describe Book do
       auth.should be_valid
       auth.books.sort.should == [book2, book0].sort
 
-      auth2 = FactoryGirl.create(:author, :books => [book0])
+      auth2 = FactoryBot.create(:author, :books => [book0])
       book0.reload
       book0.authors.sort.should == [auth, auth2].sort
       auth2.books.should == [book0]

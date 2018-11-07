@@ -45,7 +45,7 @@ group :test, :development do
   gem 'win32console', :platforms => [:mswin, :mingw]
   gem 'faster_require', :platforms => [:mswin, :mingw]
 
-  gem 'factory_girl_rails', '~> 4.3'
+  gem 'factory_bot_rails'
   gem 'capybara', '~> 2.2'
   gem 'xpath', '~> 2.1'
   gem 'guard', '~> 2.1'
@@ -53,6 +53,7 @@ group :test, :development do
   gem 'faker', '~> 1.2'
   gem 'listen', '~> 3.0.8'
   gem 'simplecov', :require => false
+  gem 'database_cleaner'
 end
 
 gem 'hirb-unicode'

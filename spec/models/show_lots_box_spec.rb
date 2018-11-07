@@ -23,16 +23,16 @@ describe "Book&Lot custom getters" do
     end
 
     it "should set correct lots_count & min_price" do
-      book = FactoryGirl.create(:book_w_author)
-      lot1 = FactoryGirl.create(:lot, :book_id => book.id, :user => @users.sample, :price => 2,
+      book = FactoryBot.create(:book_w_author)
+      lot1 = FactoryBot.create(:lot, :book_id => book.id, :user => @users.sample, :price => 2,
                                 :cityid => 0)
-      lot2 = FactoryGirl.create(:lot, :book_id => book.id, :user => @users.sample, :price => 3,
+      lot2 = FactoryBot.create(:lot, :book_id => book.id, :user => @users.sample, :price => 3,
                                 :cityid => 1)
-      lot3 = FactoryGirl.create(:lot, :book_id => book.id, :user => @users.sample, :price => 4,
+      lot3 = FactoryBot.create(:lot, :book_id => book.id, :user => @users.sample, :price => 4,
                                 :cityid => 2)
-      lot4 = FactoryGirl.create(:lot, :book_id => book.id, :user => @users.sample, :price => 5,
+      lot4 = FactoryBot.create(:lot, :book_id => book.id, :user => @users.sample, :price => 5,
                                 :cityid => 2)
-      lot5 = FactoryGirl.create(:lot, :book_id => book.id, :user => @users.sample, :price => 1,
+      lot5 = FactoryBot.create(:lot, :book_id => book.id, :user => @users.sample, :price => 1,
                                 :cityid => 2, :is_active => false)
 
       book.reload

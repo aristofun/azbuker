@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :lot do
     user_id 1
     book_id 1
@@ -15,7 +15,7 @@ FactoryGirl.define do
 
   #factory :lot_w_user, :parent => :book do |book|
   #    book.after(:create) { |b|
-  #      FactoryGirl.create(:author, :books => [b])
+  #      FactoryBot.create(:author, :books => [b])
   #    }
   #  end
 end
