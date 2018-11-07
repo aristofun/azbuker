@@ -53,6 +53,7 @@ group :test, :development do
   gem 'faker', '~> 1.2'
   gem 'listen', '~> 3.0.8'
   gem 'simplecov', :require => false
+  gem 'database_cleaner'
 end
 
 gem 'hirb-unicode'
