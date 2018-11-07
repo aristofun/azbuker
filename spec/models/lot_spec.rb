@@ -33,7 +33,7 @@ describe Lot do
 
     it "should reject wrong filesize&type&dimensions" do
       lambda do
-        lt = FactoryBot.build(:lot, :cover => Rails.root.join("spec/factories/lots.rb").open)
+        lt = FactoryBot.build(:lot, :cover => Rails.root.join("spec/factories/lot_factory.rb").open)
         lt.should_not be_valid
         lt.errors.get(:cover_content_type).should_not be_empty
 
