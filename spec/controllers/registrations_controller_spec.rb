@@ -1,6 +1,5 @@
 require 'spec_helper'
-
-describe RegistrationsController, :type => :controller do
+RSpec.describe RegistrationsController, type: :controller do
 
   before(:each) do
     @user = FactoryBot.create(:user)
