@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe BooksController do
+RSpec.describe BooksController, type: :controller do
   include ApplicationHelper
   let(:user) { FactoryBot.create(:user) }
 

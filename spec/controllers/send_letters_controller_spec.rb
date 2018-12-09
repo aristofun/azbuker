@@ -1,7 +1,6 @@
 # coding: utf-8
 require 'spec_helper'
-
-describe SendLettersController do
+RSpec.describe SendLettersController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:book) { FactoryBot.create(:book) }
   let(:lot) { FactoryBot.create(:lot, book: book) }
