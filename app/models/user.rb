@@ -59,14 +59,15 @@ class User < ActiveRecord::Base
   end
 
   def nick_generator
-    i = 0
     mailpart = self.email.split("@")[0][0, 17] if self.email.present?
-    mailpart ||= "#{I18n.l(Time.now, :format => "%b")}#{SecureRandom.random_number(99)}"
-    mailpart << "_" if mailpart.length < 3
-    while mailpart.length < 3 || User.find_by_nickname(mailpart).present?
-      mailpart = mailpart + " " + i.to_s
-      i += 1
-    end
-    mailpart
+#     i = 0
+#     mailpart = self.email.split("@")[0][0, 17] if self.email.present?
+#     mailpart ||= "#{I18n.l(Time.now, :format => "%b")}#{SecureRandom.random_number(99)}"
+#     mailpart << "_" if mailpart.length < 3
+#     while mailpart.length < 3 || User.find_by_nickname(mailpart).present?
+#       mailpart = mailpart + " " + i.to_s
+#       i += 1
+#     end
+#     mailpart
   end
 end
