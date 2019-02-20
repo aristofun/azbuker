@@ -57,12 +57,12 @@ class ApplicationController < ActionController::Base
     render template: 'stpages/error_500', status: 500
   end
 
-  def get_city
-    set_default_city
+  def city
+    define_default_city
     cookies[:cityid]
   end
 
-  def set_default_city
+  def define_default_city
     if params.has_key?('cityid')
       if params[:cityid].blank? # filter sets city to any
         cookies.permanent[:cityid] = nil

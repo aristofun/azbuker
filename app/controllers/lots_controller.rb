@@ -5,7 +5,7 @@ class LotsController < ApplicationController
                                                  :index_author]
   before_filter :findlot, :only => [:show, :update, :destroy, :edit, :close]
   before_filter :buildlot, :only => [:create]
-  before_filter :set_default_city, :only => [:index, :index_book, :index_genre, :index_author]
+  before_filter :define_default_city, :only => [:index, :index_book, :index_genre, :index_author]
   before_filter :clear_backredirect, :except => [:create, :update, :edit, :new]
 
   # caching
