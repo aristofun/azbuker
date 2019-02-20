@@ -45,7 +45,7 @@ lower(:authors) OR lower(oz_books.auth_last) LIKE lower(:authors))", options).
         order('char_length(oz_books.title) ASC, oz_books.id DESC').limit(8)
   end
 
-  def get_cover(size)
+  def hook_cover(size)
     Book.ozon_cover(ozon_coverid, size)
   end
 

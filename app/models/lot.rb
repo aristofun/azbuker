@@ -206,11 +206,11 @@ class Lot < ActiveRecord::Base
     end
   end
 
-  def get_cover(style)
+  def hook_cover(style)
     if cover.present? # relying on paperclip :default_url option for missing attachment
       cover.url(style)
     else
-      book.get_cover(style)
+      book.hook_cover(style)
     end
   end
 

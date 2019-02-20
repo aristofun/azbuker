@@ -135,10 +135,15 @@ class Author < ActiveRecord::Base
     name_string.squish!
 
     parts = name_string.split(' ')
-    first, middle, last = nil, nil, nil
+
+    first = nil
+    middle = nil
+    last = nil
 
     if parts.length >= 3
-      first, middle, last = parts[0], parts[1..-2].join(' '), parts.last
+      first = parts[0]
+      middle = parts[1..-2].join(' ')
+      last = parts.last
     elsif parts.length == 2
       first, last = parts
     else
