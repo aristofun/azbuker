@@ -79,7 +79,7 @@ describe "Users" do
       old_city = @user.cityid
 
       usr = FactoryBot.create(:user, :phone => old_phone, :nickname => old_nick,
-                               :skypename => old_skype, :cityid => old_city)
+                              :skypename => old_skype, :cityid => old_city)
 
       logout(@user)
       login(usr)

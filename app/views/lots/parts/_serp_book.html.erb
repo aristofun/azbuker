@@ -2,7 +2,7 @@
   <div class="pull-left serp-lot-image">
     <%= link_to(
                 image_tag(
-                        serp_book.get_cover(:x120), :class => "book-cover120 book-cover100",
+                        serp_book.book_cover(:x120), :class => "book-cover120 book-cover100",
                         :alt => "Книга #{serp_book.title}"),
                 book_path(serp_book.id)) %>
   </div>

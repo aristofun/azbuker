@@ -42,7 +42,7 @@ ActiveAdmin.register Book do
     end
 
     column :cover do |book|
-      image_tag(book.get_cover(:x120), :size => '48x48')
+      image_tag(book.book_cover(:x120), :size => '48x48')
     end
 
     column :updated_at

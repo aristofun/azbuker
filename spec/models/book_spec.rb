@@ -24,19 +24,19 @@ describe Book do
 
   it "should get correst coverpath value" do
     book = FactoryBot.create(:book) # with ozon_coverid
-    book.get_cover.should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
-    book.get_cover(:x300).should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
-    book.get_cover(:x200).should == "http://static.ozone.ru/multimedia/books_covers/c200/#{book.ozon_coverid}.jpg"
-    book.get_cover(:x120).should == "http://static.ozone.ru/multimedia/books_covers/c120/#{book.ozon_coverid}.jpg"
+    book.book_cover.should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
+    book.book_cover(:x300).should == "http://static.ozone.ru/multimedia/books_covers/#{book.ozon_coverid}.jpg"
+    book.book_cover(:x200).should == "http://static.ozone.ru/multimedia/books_covers/c200/#{book.ozon_coverid}.jpg"
+    book.book_cover(:x120).should == "http://static.ozone.ru/multimedia/books_covers/c120/#{book.ozon_coverid}.jpg"
 
     book2 = FactoryBot.create(:book, :ozon_coverid => nil, :coverpath_x300 => "path300.jpg",
                                :coverpath_x120 => nil)
                                      #puts book2.inspect
-    book2.get_cover.should == "path300.jpg"
-    book2.get_cover(:x300).should == "path300.jpg"
-    book2.get_cover(:x200).should == book2.coverpath_x200
+    book2.book_cover.should == "path300.jpg"
+    book2.book_cover(:x300).should == "path300.jpg"
+    book2.book_cover(:x200).should == book2.coverpath_x200
     book2.coverpath_x120.should be_nil
-    book2.get_cover(:x120).should == "/covers/missing_x120.gif"
+    book2.book_cover(:x120).should == "/covers/missing_x120.gif"
   end
 
   it "should create valid object" do

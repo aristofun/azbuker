@@ -10,7 +10,7 @@
               <% bukz4.each do |book|
 
                 opts = {
-                        :d_src => book.get_cover(:x200),
+                        :d_src => book.book_cover(:x200),
                         :d_title => book.title,
                         :d_authors => book.authors_list,
                         :d_bookid => book.id,
@@ -24,7 +24,7 @@
                     <div class="pull-left middle-lot-image">
                       <p>
                         <%= link_to(
-                                    image_tag(book.get_cover(:x120), :class => 'book-cover120'),
+                                    image_tag(book.book_cover(:x120), :class => 'book-cover120'),
                                     '#', opts.merge(:class => 'suggest_btn')) %>
                       </p>
 

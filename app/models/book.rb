@@ -122,7 +122,7 @@ class Book < ActiveRecord::Base
     .readonly(false)
   end
 
-  def hook_cover(size = :x300)
+  def book_cover(size = :x300)
     if ozon_coverid.present?
       Book.ozon_cover(ozon_coverid, size)
     else

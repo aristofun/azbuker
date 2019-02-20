@@ -32,7 +32,7 @@ ActiveAdmin::Dashboards.build do
       end
 
       column :cover do |lot|
-        link_to(image_tag(lot.get_cover(:x120), :size => '40x40'), lot_path(lot))
+        link_to(image_tag(lot.book_cover(:x120), :size => '40x40'), lot_path(lot))
       end
     end
     strong { link_to "All Lots", odminko_lots_path }
@@ -49,7 +49,7 @@ ActiveAdmin::Dashboards.build do
       column :genre
       column :lots_count
       column :cover do |book|
-        link_to(image_tag(book.get_cover(:x120), :size => '40x40'), book_path(book))
+        link_to(image_tag(book.book_cover(:x120), :size => '40x40'), book_path(book))
       end
 
     end

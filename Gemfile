@@ -45,6 +45,10 @@ group :test, :development do
   gem 'win32console', :platforms => [:mswin, :mingw]
   gem 'faster_require', :platforms => [:mswin, :mingw]
 
+  # https://github.com/pry/pry/issues/1579
+  gem 'pry'
+  gem 'rb-readline'
+
   gem 'factory_bot_rails'
   gem 'capybara', '~> 2.2'
   gem 'xpath', '~> 2.1'

@@ -244,6 +244,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    rb-readline (0.5.5)
     rdoc (3.12.2)
       json (~> 1.4)
     recaptcha (3.4.0)
@@ -365,10 +366,12 @@ DEPENDENCIES
   newrelic_rpm
   paperclip (~> 3.3.1)
   pg (~> 0.21)
+  pry
   rails (~> 3.2.18)
   rake (< 11.0)
   rb-fsevent
   rb-notifu
+  rb-readline
   recaptcha (~> 3.4.0)
   redis (~> 3.3.5)
   redis-rails

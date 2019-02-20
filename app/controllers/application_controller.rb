@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def city
+    define_default_city
+    cookies[:cityid]
+  end
 
   # Customize the Devise after_sign_in_path_for() for redirecct to previous page after login
   #  def after_sign_in_path_for(resource_or_scope)
@@ -57,10 +61,6 @@ class ApplicationController < ActionController::Base
     render template: 'stpages/error_500', status: 500
   end
 
-  def city
-    define_default_city
-    cookies[:cityid]
-  end
 
   def define_default_city
     if params.has_key?('cityid')

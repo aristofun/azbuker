@@ -34,7 +34,7 @@ class BooksController < ApplicationController
 
   def search
     q = params[:q]
-    city = get_city
+    city = self.city
 
     @books = Book.custom(:q => q, :city => city, :page => params[:page])
   end

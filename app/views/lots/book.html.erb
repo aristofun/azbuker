@@ -5,7 +5,7 @@
    set_meta_tags(
            {
                    'og:title' => "#{@book.title}, #{@book.authors_list}",
-                   'og:image' => @book.get_cover(:x300),
+                   'og:image' => @book.book_cover(:x300),
                    'og:site_name' => 'Azbuker.ru',
                    'og:description' => "Цена от #{@book.min_price} рублей, всего #{plurize(@book.lots_count, 'объявлений', 'объявление', 'объявления')}"
            }
