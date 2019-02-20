@@ -6,9 +6,11 @@
 module HtmlHelper
 
   def plurize(number, zero, single, two_3_4)
-    return "#{number} #{zero}" if (10..20).include?(number%100)
+    ostatok_by_100 = number % 100
+    return "#{number} #{zero}" if (10..20).include?(ostatok_by_100)
 
-    case number%10
+    ostatok_by_10 = number % 10
+    case ostatok_by_10
       when 1
         "#{number} #{single}"
       when 2..4
@@ -82,10 +84,10 @@ module HtmlHelper
     base_errors_block = base_errors_get
     f_names = [:notice, :warning, :message, :info, :alert]
     fl = ''
-    for name in f_names
+    f_names.each do |name|
       if flash[name].present?
         fl = fl +
-            "<div class=\"#{cssclass} #{getalertcss(name)} fade in\" data-alert=\"alert\">
+            "<div class=\"#{cssclass} #{alertcss(name)} fade in\" data-alert=\"alert\">
                  <a class=\"close\" href=\"#\">×</a>
                  <p>#{flash[name]}</p>
                  <p>#{base_errors_block}</p>
@@ -98,7 +100,7 @@ module HtmlHelper
     #''
   end
 
-  def getalertcss(name)
+  def alertcss(name)
     case name
       when :alert
         'error'
