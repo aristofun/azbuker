@@ -47,7 +47,48 @@ class Book < ActiveRecord::Base
   #  *Full text search:*
   #   * <tt>:q</tt> – query string
   def self.custom(options = {})
-    #cleanup vars
+    options.merge! custom_options(options)
+
+    condit1 = condition_string(options)
+
+    condit2, additional_options = fulltext_querry(options)
+
+    options.merge! additional_options
+
+    joins(:authors).joins(:lots).
+        select('books.*, min(lots.price) as min_price, count(DISTINCT lots.id) as lots_count').
+        where(condit1, {:lotactive => options[:is_active], :cityid => options[:city], :genre => options[:genre]}).
+        where(condit2).
+        order("#{options[:order_by2]} #{options[:order_by]} #{options[:order_to]}").
+        group('books.id').
+        paginate(:page => options[:page], :per_page => options[:limit].to_i)
+  end
+
+  def self.fulltext_querry(options)
+    return ["", {}] if options[:q].blank?
+
+    q = prepare_ts(options[:q].squish)
+    titlevec = "to_tsvector('russian', books.title)"
+    authvec = "to_tsvector('russian', authors.full)"
+    ts_q = "to_tsquery(#{sanitize(q)})"
+    rank = "(max(ts_rank(#{titlevec}, #{ts_q})) + max(ts_rank(#{authvec}, #{ts_q}))) DESC,"
+
+    #condit2 += "#{titlevec} @@ #{ts_q} AND #{authvec} @@ #{ts_q}"
+    condit2 = "(#{titlevec} || #{authvec}) @@ #{ts_q}" # better performance version
+    options[:order_by2] = rank
+
+    [condit2, options]
+  end
+
+  def self.condition_string(options)
+    condition_string = ''
+    condition_string += 'books.genre = :genre AND ' if options[:genre].present?
+    condition_string += 'lots.cityid IN (:cityid, -1) AND ' if options[:city].present?
+    condition_string += 'lots.is_active = :lotactive'
+    condition_string
+  end
+
+  def self.custom_options(options)
     options[:city] = nil if options[:city].to_i == -1
     options[:limit] ||= 16
     options[:page] ||= 1
@@ -69,37 +110,7 @@ class Book < ActiveRecord::Base
                              #'min(lots.updated_at) '
                              'books.updated_at'
                          end
-
-    condit1 = ''
-    condit1 += 'books.genre = :genre AND ' if options[:genre].present?
-    condit1 += 'lots.cityid IN (:cityid, -1) AND ' if options[:city].present?
-    condit1 += 'lots.is_active = :lotactive'
-
-    group_str = 'books.id'
-    condit2 = ''
-
-    # Fulltext search part
-    unless options[:q].blank?
-      q = prepare_ts(options[:q].squish)
-      titlevec = "to_tsvector('russian', books.title)"
-      authvec = "to_tsvector('russian', authors.full)"
-      ts_q = "to_tsquery(#{sanitize(q)})"
-      rank = "(max(ts_rank(#{titlevec}, #{ts_q})) + max(ts_rank(#{authvec}, #{ts_q}))) DESC,"
-
-      #condit2 += "#{titlevec} @@ #{ts_q} AND #{authvec} @@ #{ts_q}"
-      condit2 += "(#{titlevec} || #{authvec}) @@ #{ts_q}" # better performance version
-      group_str = 'books.id'
-      options[:order_by2] = rank
-    end
-
-    joins(:authors).joins(:lots).
-        select('books.*, min(lots.price) as min_price, count(DISTINCT lots.id) as lots_count').
-        where(condit1, {:lotactive => options[:is_active], :cityid => options[:city], :genre => options[:genre]}).
-        where(condit2).
-        order("#{options[:order_by2]} #{options[:order_by]} #{options[:order_to]}").
-        #having('count(lots.id) > 0')#why wasit?
-        group(group_str).
-        paginate(:page => options[:page], :per_page => options[:limit].to_i)
+    return options
   end
 
   # finds books of all or any of given authors, except one book
