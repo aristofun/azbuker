@@ -1,41 +1,51 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 3.2.22'
-gem 'pg', '~> 0.21'
+gem 'rails', '4.0.13'
+gem 'pg', '0.21'
 gem 'rake', '< 11.0'
 
-gem 'devise', '~> 2.0'
-gem 'cancan', '~> 1.0'
+gem 'protected_attributes' # https://github.com/rails/protected_attributes
+gem 'activeresource' # https://github.com/rails/activeresource
+gem 'actionpack-action_caching' # https://github.com/rails/actionpack-action_caching
+gem 'activerecord-session_store' # https://github.com/rails/activerecord-session_store
+gem 'rails-observers' # https://github.com/rails/rails-observers
 
-gem 'activeadmin', '~> 0.5.0' #, :require => false
-gem 'bourbon', '~> 3.1.8' #, :require => false
-gem 'meta_search', '~> 1.1'
-gem 'sass-rails', '~> 3.2.6'
+gem 'devise'
+gem 'cancan'
+
+gem 'activeadmin'#, '0.6.0' #, :require => false
+gem 'bourbon' #, :require => false
+#gem 'meta_search'
+gem 'sass-rails'
 gem 'therubyracer'
-gem 'coffee-rails', '~> 3.2.2'
+gem 'coffee-rails'
 
-gem 'whenever', '~> 0.8', :require => false
+gem 'uglifier' #, '>= 1.0.3'
+gem 'cssminify'
 
-gem 'paperclip', '~> 3.3.1'
-gem 'recaptcha', '~> 3.4.0', :require => 'recaptcha/rails'
+gem 'whenever', :require => false
+
+gem 'paperclip'
+gem 'recaptcha', :require => 'recaptcha/rails'
 
 gem 'ya2yaml'
-gem 'auto_strip_attributes', '~> 1.0'
-gem 'will_paginate', '~> 3.0'
-gem 'jquery-rails', '2.3.0'
-gem 'formtastic', '~> 2.2'
+gem 'auto_strip_attributes'
+gem 'will_paginate'
+gem 'jquery-rails'
+gem 'formtastic'
 gem 'dotenv-rails'
 
 gem 'mechanize'
 gem 'newrelic_rpm'
 gem 'redis-rails'
-gem 'redis', '~> 3.3.5'
+gem 'redis'
 
 group :test, :development do
+  gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
   gem 'letter_opener'
-  gem 'rspec-rails', '~> 2.14'
+  gem 'rspec-rails'#, '~> 2.14'
   gem 'capistrano', '~> 2.13'
-  gem 'net-ssh', '~> 4.2'
+  gem 'net-ssh' 
   gem 'capistrano-rbenv', '~> 1.0'
 
   gem 'terminal-notifier-guard'
@@ -50,21 +60,18 @@ group :test, :development do
   gem 'rb-readline'
 
   gem 'factory_bot_rails'
-  gem 'capybara', '~> 2.2'
-  gem 'xpath', '~> 2.1'
-  gem 'guard', '~> 2.1'
-  gem 'guard-rspec', '~> 4.2'
-  gem 'faker', '~> 1.2'
-  gem 'listen', '~> 3.0.8'
+  gem 'capybara'#, '~> 2.2'
+  gem 'xpath'
+  gem 'guard'#, '~> 2.1'
+  gem 'guard-rspec'#, '~> 4.2'
+  gem 'faker'#, '~> 1.2'
+  gem 'listen'#, '~> 3.0.8'
   gem 'simplecov', :require => false
   gem 'database_cleaner'
+  gem 'selenium-webdriver'
 end
 
 gem 'hirb-unicode'
 
 # Gems used only for assets and not required
 # in production environments by default.
-group :assets do
-  gem 'uglifier' #, '>= 1.0.3'
-  gem 'cssminify'
-end
