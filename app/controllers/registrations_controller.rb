@@ -1,16 +1,15 @@
 class RegistrationsController < Devise::RegistrationsController
-
+  before_action :set_user, only: :show
+  
   def show
-    @user = User.find(params[:id])
-
     @lots = Lot.custom(
-        :userid => @user.id,
-        :is_active => params[:is_active],
-        :genre => params[:genre],
-        :order_by => params[:order_by],
-        :order_to => params[:order_to],
-        :page => params[:page],
-        :limit => 14
+      :userid => @user.id,
+      :is_active => params[:is_active],
+      :genre => params[:genre],
+      :order_by => params[:order_by],
+      :order_to => params[:order_to],
+      :page => params[:page],
+      :limit => 14
     )
   end
 
@@ -34,4 +33,14 @@ class RegistrationsController < Devise::RegistrationsController
       end
     end
   end
+
+  private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+# def sign_up_params
+#   params.require(:user).permit(:agreement, :email, :password, :password_confirmation, :remember_me)
+# end
 end
