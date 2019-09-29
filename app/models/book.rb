@@ -1,35 +1,27 @@
 # coding: utf-8
 class Book < ActiveRecord::Base
   has_and_belongs_to_many :authors
-  has_many :lots, :dependent => :delete_all
-
-  def self.ozon_cover(ozon_id, size = :x300)
-    size = "/c#{size[1..-1]}"
-    size = '' if (size == '/c300' || size == '/criginal')
-    "http://static.ozone.ru/multimedia/books_covers#{size}/#{ozon_id}.jpg"
-  end
-
-  attr_accessible :title, :ozon_coverid, :ozonid, :genre
+  has_many :lots, dependent: :delete_all
 
   validates :genre,
-            :numericality => {:greater_than_or_equal_to => -1, :less_than_or_equal_to => 7,
-                              :only_integer => true}
+            numericality: { greater_than_or_equal_to: -1, less_than_or_equal_to: 7,
+                              only_integer: true }
 
   validates :title,
-            :presence => true,
-            :allow_blank => false,
-            :length => {:maximum => 255}
+            presence: true,
+            allow_blank: false,
+            length: { maximum: 255 }
 
   validates :min_price,
-            :numericality => true,
-            :allow_blank => true
+            numericality: true,
+            allow_blank: true
 
   scope :present, :conditions => ['books.lots_count > 0']
   scope :absent, :conditions => ['books.lots_count = 0']
   scope :unauthored, joins('left outer join authors_books on books.id=authors_books.book_id').
         where('authors_books.author_id is null')
 
-  scope :fresh_first, :order => 'books.updated_at DESC'
+  scope :fresh_first, -> { order('books.updated_at DESC') }
 
   # Complex Books obtainer
   # can be chained to Author.books.custom...
@@ -46,6 +38,13 @@ class Book < ActiveRecord::Base
   #
   #  *Full text search:*
   #   * <tt>:q</tt> – query string
+
+  def self.ozon_cover(ozon_id, size = :x300)
+    size = "/c#{size[1..-1]}"
+    size = '' if (size == '/c300' || size == '/criginal')
+    "http://static.ozone.ru/multimedia/books_covers#{size}/#{ozon_id}.jpg"
+  end
+
   def self.custom(options = {})
     #cleanup vars
     options[:city] = nil if options[:city].to_i == -1
