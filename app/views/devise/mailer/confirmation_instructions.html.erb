@@ -10,9 +10,9 @@
   подтвердить аккаунт по ссылке:</p>
 
 <p><%= link_to confirmation_url(@resource,
-                        :confirmation_token => @resource.confirmation_token),
+                        :confirmation_token => @token),
        confirmation_url(@resource,
-                        :confirmation_token => @resource.confirmation_token) %></p>
+                        :confirmation_token => @token) %></p>
 
 <p>После подтверждения рекомендуется указать свой телефон и Skype. Иначе как с вами
   свяжутся?</p>
