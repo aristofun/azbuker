@@ -3,8 +3,8 @@ require 'faker'
 
 FactoryBot.define do
   factory :lot do
-    user_id 1
-    book_id 1
+    user_id "1"
+    book_id "1"
 
     sequence(:price) { |n| n%571 }
     sequence(:comment) { |n| "Эй ты номер #{(n%200)}+ #{Faker::Lorem.sentence(3)}" }
