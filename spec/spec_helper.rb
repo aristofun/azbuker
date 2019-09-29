@@ -64,7 +64,8 @@ RSpec.configure do |config|
     else
       visit user_session_path
 
-      within(:xpath, "//form[@action='#{user_session_path}']") do
+      within(:xpath, ".//form[@id='qwe']") do
+      #within(:xpath, ".//form[@action='#{user_session_path}']") do
         fill_in 'user_email', :with => user.email
         fill_in 'user_password', :with => user.password
         click_button "Войти"
@@ -112,6 +113,7 @@ RSpec.configure do |config|
 
     FileUtils.rm_rf(Dir["#{Rails.root}/public/system/covers/"]) if Rails.env.test?
     #puts FileUtils.rm_rf(Dir["#{Rails.root}/public/covers/lots"])
+    DatabaseCleaner.clean
   end
 end
 
