@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   helper :all
   protect_from_forgery
 
@@ -47,6 +49,12 @@ class ApplicationController < ActionController::Base
   #13	      super
   #14	    end
   #	  end
+  protected
+
+  def configure_permitted_parameters
+   devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:password, :remember_me, :email, :agreement) }
+   devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:password, :remember_me, :email, :agreement) }
+  end
 
   private
 
@@ -116,3 +124,4 @@ class ApplicationController < ActionController::Base
     str.gsub('%', '\%').gsub('_', '\_') + '%'
   end
 end
+
