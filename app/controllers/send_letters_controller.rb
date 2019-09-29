@@ -15,8 +15,13 @@ class SendLettersController < ApplicationController
   end
 
   private
+
+  def usermessage_params
+    params.require(:user_message).permit(:email, :text, :type, :lotid, :userid)
+  end
+
   def captcha_and_buildmsg
-    @user_message = UserMessage.new(params[:user_message])
+    @user_message = UserMessage.new(usermessage_params)
     @captcha_error = !verify_recaptcha unless Rails.env.test?
   end
 
@@ -48,7 +53,6 @@ class SendLettersController < ApplicationController
     end
   end
 
-  private
   def deliver(msg)
     begin
       UserMailer.message_or_abuse(msg).deliver
