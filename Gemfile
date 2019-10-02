@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
+ruby '2.1.10'
+
 gem 'rails', '4.0.13'
 gem 'pg', '0.21'
-gem 'rake', '< 11.0'
+gem 'rake'#, '< 11.0'
 
 gem 'protected_attributes' # https://github.com/rails/protected_attributes
 gem 'activeresource' # https://github.com/rails/activeresource
@@ -13,9 +15,9 @@ gem 'rails-observers' # https://github.com/rails/rails-observers
 gem 'devise'
 gem 'cancan'
 
-gem 'activeadmin'#, '0.6.0' #, :require => false
+gem 'activeadmin'#, '0.5.0' #, :require => false
 gem 'bourbon' #, :require => false
-#gem 'meta_search'
+gem 'meta_search'
 gem 'sass-rails'
 gem 'therubyracer'
 gem 'coffee-rails'
@@ -43,7 +45,7 @@ gem 'redis'
 group :test, :development do
   gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
   gem 'letter_opener'
-  gem 'rspec-rails'#, '~> 2.14'
+  gem 'rspec-rails', '~> 2.14'
   gem 'capistrano', '~> 2.13'
   gem 'net-ssh' 
   gem 'capistrano-rbenv', '~> 1.0'
@@ -60,18 +62,17 @@ group :test, :development do
   gem 'rb-readline'
 
   gem 'factory_bot_rails'
-  gem 'capybara'#, '~> 2.2'
+  gem 'capybara', '~> 2.2'
   gem 'xpath'
-  gem 'guard'#, '~> 2.1'
-  gem 'guard-rspec'#, '~> 4.2'
-  gem 'faker'#, '~> 1.2'
-  gem 'listen'#, '~> 3.0.8'
+  gem 'guard', '~> 2.1'
+  gem 'guard-rspec', '~> 4.2'
+  gem 'faker', '~> 1.2'
+  gem 'listen', '~> 3.0.8'
   gem 'simplecov', :require => false
   gem 'database_cleaner'
   gem 'selenium-webdriver'
+  gem 'byebug'
 end
 
 gem 'hirb-unicode'
 
-# Gems used only for assets and not required
-# in production environments by default.
