@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper :all
-  protect_from_forgery
+  protect_from_forgery with: :exception
 
   unless Rails.application.config.consider_all_requests_local
     rescue_from Exception, with: :render_500
@@ -51,10 +51,10 @@ class ApplicationController < ActionController::Base
   #	  end
   protected
 
-  def configure_permitted_parameters
-   devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:password, :remember_me, :email, :agreement) }
-   devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:password, :remember_me, :email, :agreement) }
-  end
+ def configure_permitted_parameters
+  devise_parameter_sanitizer.for(:sign_in) { |u| u.permit!(:password, :remember_me, :email, :agreement) }
+  devise_parameter_sanitizer.for(:sign_up) { |u| u.permit!(:password, :remember_me, :email, :agreement) }
+ end
 
   private
 
