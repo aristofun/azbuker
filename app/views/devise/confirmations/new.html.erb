@@ -3,7 +3,7 @@
 
     <h4>Активация аккаунта</h4>
 
-    <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+    <%= form_for(:user, :as => resource_name, :builder => BootstrapFormBuilder,
                  :url => confirmation_path(resource_name),
                  :html => {:class => "form-stacked passrecovery", :method => :post}) do |f| %>
         <%= f.email_field :email, :class => "span5", :value => params[:email] %>
