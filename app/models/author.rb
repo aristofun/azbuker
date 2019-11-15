@@ -3,27 +3,26 @@ class Author < ActiveRecord::Base
   has_and_belongs_to_many :books
 
   auto_strip_attributes :first, :middle, :last, :squish => true
-  attr_accessible :first, :middle, :last
 
   before_validation :create_names
 
   validates :first, :middle,
-            :allow_blank => true,
-            :format => {:with => /^[ \-\(\)"'\p{Alnum}]+$/}
+            allow_blank: true,
+            format: { with: /\A[ \-\(\)"'\p{Alnum}]+\z/ }
 
   validates :last,
-            :presence => true,
-            :allow_blank => false,
-            :format => {:with => /^[\-\(\)"'\s\p{Alnum}]+$/}
+            presence: true,
+            allow_blank: false,
+            format: { with: /\A[\-\(\)"'\s\p{Alnum}]+\z/ }
 
   validates :short,
-            :presence => true,
-            :allow_blank => false
+            presence: true,
+            allow_blank: false
 
   validates :full,
-            :presence => true,
-            :allow_blank => false,
-            :uniqueness => true
+            presence: true,
+            allow_blank: false,
+            uniqueness: true
 
   scope :unbooked, joins('left outer join authors_books on authors.id=authors_books.author_id').
       where('authors_books.book_id is null')
@@ -135,10 +134,15 @@ class Author < ActiveRecord::Base
     name_string.squish!
 
     parts = name_string.split(' ')
-    first, middle, last = nil, nil, nil
+
+    first = nil
+    middle = nil
+    last = nil
 
     if parts.length >= 3
-      first, middle, last = parts[0], parts[1..-2].join(' '), parts.last
+      first = parts[0]
+      middle = parts[1..-2].join(' ')
+      last = parts.last
     elsif parts.length == 2
       first, last = parts
     else
@@ -150,5 +154,11 @@ class Author < ActiveRecord::Base
 
   def self.split_string(str)
     str.split(/[\b\.]?(?:,\s*|\s+и\s+)+/iu)
+  end
+
+  private
+
+  def authors_params
+    params.require(:author).permit(:first, :middle, :last)
   end
 end

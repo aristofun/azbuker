@@ -3,21 +3,23 @@
 class BooksController < ApplicationController
   before_filter :authenticate_user!, :only => [:suggest]
 
-  #caches_action :search,
-  #              :cache_path => Proc.new { |c|
-  #                c.params.merge(:city => c.cookies[:cityid])
-                  #.delete_if { |k, v|                    k.starts_with?('utm_')                  }
-                #},
-                #:expires_in => 5.minutes,
-                #:race_condition_ttl => 2.seconds,
-                #:unless => Proc.new { |c| c.request.xml_http_request? }
+# caches_action :search,
+#               :cache_path => Proc.new { |c|
+#                 c.params.merge(:city => c.cookies[:cityid])
+#                 .delete_if { |k, v|                    k.starts_with?('utm_')                  }
+#               },
+#               :expires_in => 5.minutes,
+#               :race_condition_ttl => 2.seconds,
+#               :unless => Proc.new { |c| c.request.xml_http_request? }
 
 
   def suggest
-    opts = {:title => strip_like_symbols(params[:title]),
-            :authors => strip_like_symbols(params[:authors])}
+    opts = {:title => strip_like_symbols(title),
+            :authors => strip_like_symbols(authors)}
+    
     # title, authors
     books = OzBook.suggested(opts)
+
     # fill up to 4 array with current books
     books_current = Book.suggested(opts)
 
@@ -34,8 +36,27 @@ class BooksController < ApplicationController
 
   def search
     q = params[:q]
-    city = get_city
+    city = self.city
 
-    @books = Book.custom(:q => q, :city => city, :page => params[:page])
+    @books = Book.custom(:q => q, :city => city, :page => page)
+  end
+
+  private 
+
+  def books_params
+    params.require(:book).permit(:title, :ozon_coverid, :authors,
+                                 :ozonid, :genre)
+  end
+  
+  def title
+    params[:title]
+  end
+
+  def authors
+    params[:authors]
+  end
+
+  def page
+    params[:page]
   end
 end

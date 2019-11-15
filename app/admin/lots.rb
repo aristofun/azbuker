@@ -30,7 +30,7 @@ ActiveAdmin.register Lot do
     end
 
     column :cover do |lot|
-      link_to(image_tag(lot.get_cover(:x120), :size => '48x48'), lot_path(lot))
+      link_to(image_tag(lot.book_cover(:x120), :size => '48x48'), lot_path(lot))
     end
 
     column :price

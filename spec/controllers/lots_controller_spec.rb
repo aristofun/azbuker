@@ -137,8 +137,8 @@ RSpec.describe LotsController, type: :controller do
         expect(assigns_book.coverpath_x300).to eq lot.cover.url(:x300)
         expect(assigns_book.coverpath_x200).to eq lot.cover.url(:x200)
         expect(assigns_book.coverpath_x120).to eq lot.cover.url(:x120)
-        expect(assigns_book.get_cover(:x300)).to eq Book.ozon_cover(lattr[:ozon_coverid])
-        expect(assigns_book.get_cover(:x200)).to eq Book.ozon_cover(lattr[:ozon_coverid], :x200)
+        expect(assigns_book.book_cover(:x300)).to eq Book.ozon_cover(lattr[:ozon_coverid])
+        expect(assigns_book.book_cover(:x200)).to eq Book.ozon_cover(lattr[:ozon_coverid], :x200)
         expect(assigns_book.ozonid).to eq lattr[:ozonid].to_s
         expect(assigns_book.lots_count).to eq 1
         expect(response).to redirect_to(Lot.last)
@@ -178,8 +178,8 @@ RSpec.describe LotsController, type: :controller do
                                                       ]
           expect(assigns_book.genre).to eq book.genre
           expect(assigns_book.lots_count).to eq 1
-          expect(assigns_book.get_cover(:x300)).to eq assigns(:lot).cover.url(:x300)
-          expect(assigns_book.get_cover(:x200)).to eq assigns(:lot).cover.url(:x200)
+          expect(assigns_book.book_cover(:x300)).to eq assigns(:lot).cover.url(:x300)
+          expect(assigns_book.book_cover(:x200)).to eq assigns(:lot).cover.url(:x200)
           expect(assigns_book.ozon_coverid).to be_blank
           expect(assigns_book.ozonid).to eq lattr[:ozonid].to_s
         end
@@ -228,7 +228,7 @@ RSpec.describe LotsController, type: :controller do
           expect(lot.can_postmail).to eq lattr[:can_postmail]
           expect(lot.price).to eq lattr[:price]
           expect(lot.book).to eq book2
-          expect(lot.book.get_cover('300')).to_not eq lot.cover.url(:x300)
+          expect(lot.book.book_cover('300')).to_not eq lot.cover.url(:x300)
 
           lattr = lot_attr("#{author1.short}Uj", book1, 734).merge({bookid: ozbook.id,
             ozon_flag: ozbook.id, ozonid: 7})
@@ -336,7 +336,7 @@ RSpec.describe LotsController, type: :controller do
         }.to change(Author, :count).by(0)
 
         pushkin.reload
-        expect(Author.find_all_by_last("Пушкин")).to match_array [pushkin]
+        expect(Author.where("Пушкин").last).to match_array [pushkin]
         expect(pushkin.full).to eq "А С Пушкин"
         expect(pushkin.books[0].title).to eq book[:title]
 

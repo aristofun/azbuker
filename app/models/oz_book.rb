@@ -1,24 +1,22 @@
 # coding: utf-8
 class OzBook < ActiveRecord::Base
-  attr_accessible :auth_all, :auth_last, :genre, :ozon_coverid, :ozonid, :title
-
-  validates :genre, :numericality => {:only_integer => true}
-  validates :ozonid, :presence => true, :numericality => {:only_integer => true}
+  validates :genre, numericality:  { only_integer: true }
+  validates :ozonid, presence: true, numericality:  { only_integer: true }
 
   validates :title,
-            :presence => true,
-            :allow_blank => false,
-            :length => {:maximum => 255}
+            presence: true,
+            allow_blank: false,
+            length: { maximum: 255 }
 
   validates :auth_all,
-            :presence => true,
-            :allow_blank => false,
-            :length => {:maximum => 255}
+            presence: true,
+            allow_blank: false,
+            length: { maximum: 255 }
 
   validates :auth_last,
-            :presence => true,
-            :allow_blank => true,
-            :length => {:maximum => 255}
+            presence: true,
+            allow_blank: true,
+            length: { maximum: 255 }
 
   def self.create_from_ozon_book!(ozon_book)
     ozbook = OzBook.where(
@@ -45,7 +43,7 @@ lower(:authors) OR lower(oz_books.auth_last) LIKE lower(:authors))", options).
         order('char_length(oz_books.title) ASC, oz_books.id DESC').limit(8)
   end
 
-  def get_cover(size)
+  def book_cover(size)
     Book.ozon_cover(ozon_coverid, size)
   end
 
@@ -59,5 +57,12 @@ lower(:authors) OR lower(oz_books.auth_last) LIKE lower(:authors))", options).
     end
     @authors_list = authors.to_sentence(:last_word_connector => ' и ',
                                         :two_words_connector => ' и ')
+  end
+
+  private
+
+  def ozbooks_params
+    require(:ozbook).permit([:auth_all, :auth_last, :genre,
+                             :ozon_coverid, :ozonid, :title])
   end
 end

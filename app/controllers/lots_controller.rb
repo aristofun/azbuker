@@ -5,8 +5,9 @@ class LotsController < ApplicationController
                                                  :index_author]
   before_filter :findlot, :only => [:show, :update, :destroy, :edit, :close]
   before_filter :buildlot, :only => [:create]
-  before_filter :set_default_city, :only => [:index, :index_book, :index_genre, :index_author]
+  before_filter :define_default_city, :only => [:index, :index_book, :index_genre, :index_author]
   before_filter :clear_backredirect, :except => [:create, :update, :edit, :new]
+  before_filter :set_author, only: :index_author
 
   # caching
   caches_action :index,
@@ -40,7 +41,6 @@ class LotsController < ApplicationController
   # GET /author/:authorid
   # default paginator = 12 books
   def index_author
-    @author = Author.find(params[:authorid])
     @books = @author.books.custom({:city => cookies[:cityid],
                                    :order_by => params[:order_by],
                                    :order_to => params[:order_to],
@@ -56,7 +56,7 @@ class LotsController < ApplicationController
                         :page => params[:page],
                         :city => cookies[:cityid],
                         :limit => 7})
-    @book = @lots[0].try(:book) || Book.find(params[:bookid].to_i)
+    @book = @lots[0].try(:book) || set_bookid
 
     @another_books = Book.other_books(@book.authors[0], nil, false,
                                       @book.id).present.fresh_first.limit(3) if @book.authors.present?
@@ -68,8 +68,7 @@ class LotsController < ApplicationController
     end
   end
 
-  def index
-  end
+  def index; end
 
   # GET /lots/1
   def show
@@ -85,7 +84,7 @@ class LotsController < ApplicationController
     recover_lot_contacts
 
     # find Book if bookid passed
-    @ready_book = Book.find_by_id(params[:bookid])
+    @ready_book = Book.find_by(id: id_book)
     populate_virtual_attributes(@lot, @ready_book)
   end
 
@@ -124,10 +123,10 @@ class LotsController < ApplicationController
 # PUT /lots/1
 # PUT /lots/1.json
   def update
-    params[:lot][:phone] = nil if @lot.user.phone == params[:lot][:phone]
-    params[:lot][:skypename] = nil if @lot.user.skypename== params[:lot][:skypename]
+    lot_phone = nil if @lot.user.phone == lot_phone
+    lot_skypename = nil if @lot.user.skypename == lot_skypename
 
-    if @lot.update_attributes(params[:lot])
+    if @lot.update_attributes(lots_params)
       redirect_to @lot, notice: t("activerecord.success.updated", :model => Lot.model_name.human)
     else
       render action: "edit"
@@ -169,6 +168,12 @@ class LotsController < ApplicationController
   end
 
   private
+
+  def lots_params
+    params.require(:lot).permit(:price, :comment, :can_deliver, :can_postmail, :cover,
+                                :skypename, :phone, :cityid, :book_authors, :book_title, :book_genre,
+                                :ozonid, :ozon_coverid, :bookid, :ozon_flag)
+  end
 
   def update_book_cover
     if @lot.cover.present?
@@ -245,11 +250,31 @@ class LotsController < ApplicationController
   end
 
   def buildlot
-    @lot = Lot.new(params[:lot])
+    @lot = Lot.new#(params[:lot])
   end
 
   def findlot
     @lot = Lot.find(params[:id])
+  end
+
+  def set_author
+    @author = Author.find(params[:authorid])
+  end
+
+  def set_bookid
+    Book.find(params[:bookid].to_i)
+  end
+
+  def lot_phone
+    params[:lot][:phone]
+  end
+
+  def lot_skypename
+    params[:lot][:skypename]
+  end
+
+  def id_book
+    params[:bookid]
   end
 
   def recover_lot_contacts

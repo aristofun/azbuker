@@ -14,7 +14,7 @@ describe OzBook do
 
   it "should create himself from OzonBook" do
     @ozon_book.should_skip?.should == false
-    @ozon_book.state_valid?.should be_true
+    @ozon_book.state_valid?.should be_truthy
     @ozon_book.to_s.should be_present
 
     expect {

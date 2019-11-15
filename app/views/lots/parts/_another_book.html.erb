@@ -2,7 +2,7 @@
 <p class="right-book">
   <%= link_to(
               image_tag(
-                      another_book.get_cover(:x120), :class => "book-cover120",
+                      another_book.book_cover(:x120), :class => "book-cover120",
                       :alt => "Книга #{another_book.title}"),
               book_path(another_book.id)) %>
 </p>

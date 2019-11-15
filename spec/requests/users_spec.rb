@@ -23,7 +23,7 @@ describe "Users" do
 
     it "should allow admin users" do
       user = FactoryBot.create(:user, :admin => true)
-      login(user).should be_true
+      login(user).should be_truthy
       config1
 
       visit odminko_dashboard_path
@@ -42,7 +42,7 @@ describe "Users" do
 
     it "should decline non-admin users" do
       user = FactoryBot.create(:user)
-      login(user).should be_true
+      login(user).should be_truthy
 
       visit odminko_dashboard_path
       #puts user.inspect
@@ -61,7 +61,7 @@ describe "Users" do
 
     before(:each) do
       @user = FactoryBot.create(:user)
-      login(@user).should be_true
+      login(@user).should be_truthy
     end
 
     it "should n't allow anonym user" do
@@ -79,7 +79,7 @@ describe "Users" do
       old_city = @user.cityid
 
       usr = FactoryBot.create(:user, :phone => old_phone, :nickname => old_nick,
-                               :skypename => old_skype, :cityid => old_city)
+                              :skypename => old_skype, :cityid => old_city)
 
       logout(@user)
       login(usr)
@@ -171,7 +171,7 @@ describe "Users" do
       user = FactoryBot.create(:user)
       user.confirmed_at = nil
       user.save
-      login(user, user_session_path, false).should be_false
+      login(user, user_session_path, false).should be_falsey
 
       page.current_path.should == user_session_path
       page.should match_selector_content("div.alert-message", I18n.t("devise.failure.unconfirmed"))

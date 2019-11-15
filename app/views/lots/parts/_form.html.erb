@@ -54,7 +54,7 @@
            style="<%= 'display:none;' if @lot.bookid.blank? || book_edit || book_disabled %>">
         <div class="pull-left middle-lot-image">
           <ul class="media-grid">
-            <li><a href="#"><img src="<%= @ready_book.get_cover(:x200) if @ready_book %>"
+            <li><a href="#"><img src="<%= @ready_book.book_cover(:x200) if @ready_book %>"
                                  class="book-cover200 thumbnail"></a></li>
           </ul>
           <%= f.hidden_field :bookid %>

@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe User do
+describe User do#, :type => :request do
   before(:each) do
     @usr1 = FactoryBot.create(:user, :cityid => -1)
     @usr1.reload
@@ -61,7 +61,7 @@ describe User do
       @usr1.nickname.should_not be_blank
       @usr1.nickname = ''
       @usr1.should_not be_valid
-      @usr1.save.should be_false
+      @usr1.save.should be_falsey
     end
 
     it "should validate unique nickname" do

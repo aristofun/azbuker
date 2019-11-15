@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   helper :all
-  protect_from_forgery
+  protect_from_forgery with: :exception
 
   unless Rails.application.config.consider_all_requests_local
     rescue_from Exception, with: :render_500
@@ -31,6 +33,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def city
+    define_default_city
+    cookies[:cityid]
+  end
 
   # Customize the Devise after_sign_in_path_for() for redirecct to previous page after login
   #  def after_sign_in_path_for(resource_or_scope)
@@ -43,6 +49,13 @@ class ApplicationController < ActionController::Base
   #13	      super
   #14	    end
   #	  end
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:username, :email) }
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:username, :email, :agreement, :password) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :password, :password_confirmation, :current_password)}
+  end
 
   private
 
@@ -57,12 +70,8 @@ class ApplicationController < ActionController::Base
     render template: 'stpages/error_500', status: 500
   end
 
-  def get_city
-    set_default_city
-    cookies[:cityid]
-  end
 
-  def set_default_city
+  def define_default_city
     if params.has_key?('cityid')
       if params[:cityid].blank? # filter sets city to any
         cookies.permanent[:cityid] = nil
@@ -116,3 +125,4 @@ class ApplicationController < ActionController::Base
     str.gsub('%', '\%').gsub('_', '\_') + '%'
   end
 end
+

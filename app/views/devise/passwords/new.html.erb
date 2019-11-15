@@ -2,7 +2,7 @@
   <div class="span-one-third offset5 well regbox">
     <h4>Отправка забытого пароля</h4>
 
-    <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+    <%= form_for(:user, :as => resource_name, :builder => BootstrapFormBuilder,
                  :url => password_path(resource_name),
                  :html => {:class => "form-stacked passrecovery", :method => :post}) do |f| %>
         <%= f.email_field :email, :class => "span5" %>
