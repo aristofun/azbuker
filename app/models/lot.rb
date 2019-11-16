@@ -8,10 +8,6 @@ class Lot < ActiveRecord::Base
   attr_accessor :book_title, :book_authors, :ozon_coverid, :book_genre, :bookid, :ozonid,
                 :ozon_flag
 
-#attr_accessible :price, :comment, :can_deliver, :can_postmail, :cover,
-#  :skypename, :phone, :cityid, :book_authors, :book_title, :book_genre,
-#  :ozonid, :ozon_coverid, :bookid, :ozon_flag
-
   validates :book_authors,
             presence: true,
             allow_blank: false,
