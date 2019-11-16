@@ -45,3 +45,25 @@ namespace :db do
     end
   end
 end
+
+def current_config(options = {})
+  options = { :env => Rails.env }.merge! options
+
+  if options[:config]
+    @current_config = options[:config]
+  else
+    @current_config ||= if ENV['DATABASE_URL']
+                          database_url_config
+                        else
+                          ActiveRecord::Base.configurations[options[:env]]
+                        end
+  end
+end
+
+def set_psql_env(config)
+  ENV['PGHOST']     = config['host']          if config['host']
+  ENV['PGPORT']     = config['port'].to_s     if config['port']
+  ENV['PGPASSWORD'] = config['password'].to_s if config['password']
+  ENV['PGUSER']     = config['username'].to_s if config['username']
+end
+

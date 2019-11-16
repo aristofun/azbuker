@@ -1,49 +1,47 @@
 # coding: utf-8
 
 class User < ActiveRecord::Base
-  has_many :lots, :dependent => :delete_all
+  has_many :lots, dependent: :delete_all
 
   # Include default devise modules. Others available are:
   # :encryptable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :token_authenticatable, :confirmable,
+  devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable, :validatable
 
   # generate unique user name initially
-  before_validation :create_nickname, :on => :create
-
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :agreement, :nickname, :skypename, :phone, :cityid
+  before_validation :create_nickname, on: :create
 
   auto_strip_attributes :nickname, :skypename, :phone, :cityid, :squish => true
 
-  validates_acceptance_of :agreement, :allow_nil => false, :on => :create
-
+  validates_acceptance_of :agreement, allow_nil: false, on: :create
+  
   validates :cityid,
-            :numericality => {:greater_than_or_equal_to => -1},
-            :allow_nil => false
-
+            numericality: { greater_than_or_equal_to: -1 },
+            allow_nil: false
+  
   validates :nickname,
-            :length => {:in => 3..20},
-            :uniqueness => true
-
+            length: { in: 3..20 },
+            uniqueness: true
+  
   validates :skypename,
-            :length => {:in => 4..30},
-            :format => {:with => /^[-_.a-zA-Z0-9]{4,30}$/},
-            :allow_blank => true
-
+            length: { in: 4..30 },
+            format: { with: /\A[-_.a-zA-Z0-9]{4,30}\z/ },
+            allow_blank: true
+  
   validates :phone,
-            :format => {:with => /^[\(\)0-9\- \+\.]{10,17}$/,
-                        :message => I18n.t("activerecord.errors.messages.phone_format")},
-            :length => {:minimum => 10,
-                        :maximum => 15,
-                        :tokenizer => lambda { |str| str.scan(/\d/) },
-                        :message => I18n.t("activerecord.errors.messages.phone_format")
+            format: { with: /\A[\(\)0-9\- \+\.]{10,17}\z/,
+                      message: I18n.t("activerecord.errors.messages.phone_format") },
+            length: { minimum: 10,
+                      maximum: 15,
+                      tokenizer: lambda { |str| str.scan(/\d/) },
+                      message: I18n.t("activerecord.errors.messages.phone_format")
             },
-            :allow_blank => true
+            allow_blank: true
 
   after_initialize { self.cityid ||= -1 }
-  scope :unconfirmed, where(:confirmed_at => nil)
-  scope :admins, where(:admin => true)
+
+  scope :unconfirmed, -> { where confirmed_at: nil }
+  scope :admins, -> { where admin: true }
 
   def confirm!
     super

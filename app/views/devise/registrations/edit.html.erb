@@ -37,9 +37,11 @@
       <%= flash_notice("span8 offset1 alert-message ").html_safe -%>
 
       <div class="span12">
-        <%= form_for(resource, :as => resource_name, :builder => BootstrapFormBuilder,
+        <%= form_for(:user, :as => resource_name, :builder => BootstrapFormBuilder,
                      :url => registration_path(resource_name),
-                     :html => {:method => :put}) do |f| %>
+                     :html => {:method => :put,
+                               :id => 'edit_user',
+                               :class => 'edit_user'}) do |f| %>
             <fieldset>
               <%= f.text_field :nickname, :class => "span5", :alt_text => "от 3 до 20 символов" %>
               <%= f.text_field :phone, :class => "span5", :alt_text => "ваш полный номер телефона с кодом города" %>
@@ -65,3 +67,4 @@
     </div>
   </div>
 </div>
+

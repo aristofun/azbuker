@@ -2,7 +2,8 @@
    book_edit ||= false
    book_disabled ||= false
 %>
-<%= form_for(@lot, :html => {:class => "form-stacked form-lot"}, :builder => BootstrapFormBuilder) do |f| %>
+    <%= form_for(:lot, :html => {:class => "form-stacked form-lot", :id => 'new_lot'}, :url => lots_path, 
+                 :builder => BootstrapFormBuilder) do |f| %>
     <div class="row" id="lot_form">
       <div class="span7">
         <%= f.text_field :book_title, :class => "span7", :size => 30,
@@ -54,7 +55,7 @@
            style="<%= 'display:none;' if @lot.bookid.blank? || book_edit || book_disabled %>">
         <div class="pull-left middle-lot-image">
           <ul class="media-grid">
-            <li><a href="#"><img src="<%= @ready_book.get_cover(:x200) if @ready_book %>"
+            <li><a href="#"><img src="<%= @ready_book.book_cover(:x200) if @ready_book %>"
                                  class="book-cover200 thumbnail"></a></li>
           </ul>
           <%= f.hidden_field :bookid %>

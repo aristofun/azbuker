@@ -1,7 +1,7 @@
 <%
    metatags =
            {
-                   'og:image' => @lot.get_cover(:x300),
+                   'og:image' => @lot.book_cover(:x300),
                    'og:site_name' => 'Azbuker.ru',
                    'og:description' => "Цена #{@lot.price} рублей"
            }
@@ -32,8 +32,8 @@
         </p>
     <% end %>
 
-    <%= render 'lots/parts/big_lot_cover', :big_book => @lot.book, :cover => @lot.get_cover(:x300),
-               :show_lightbox => true, :cover_original => @lot.get_cover(:original) %>
+    <%= render 'lots/parts/big_lot_cover', :big_book => @lot.book, :cover => @lot.book_cover(:x300),
+               :show_lightbox => true, :cover_original => @lot.book_cover(:original) %>
 
     <p>
       <em><%= l(@lot.created_at, :format => :long) -%></em>
@@ -189,7 +189,7 @@
               <% lotz.each do |lot| %>
                   <div class="span3">
                     <p><%= link_to(
-                                   image_tag(lot.get_cover(:x120), :class => "book-cover120"),
+                                   image_tag(lot.book_cover(:x120), :class => "book-cover120"),
                                    lot_path(lot.id)) %></p>
 
                     <p>

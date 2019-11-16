@@ -3,65 +3,61 @@ class Lot < ActiveRecord::Base
   belongs_to :user
 
   after_save :update_book_cache
-  after_destroy :dekrement, :if => :is_active
+  after_destroy :dekrement, if: :is_active
 
   attr_accessor :book_title, :book_authors, :ozon_coverid, :book_genre, :bookid, :ozonid,
                 :ozon_flag
 
-  attr_accessible :price, :comment, :can_deliver, :can_postmail, :cover,
-                  :skypename, :phone, :cityid, :book_authors, :book_title, :book_genre,
-                  :ozonid, :ozon_coverid, :bookid, :ozon_flag
-
   validates :book_authors,
-            :presence => true,
-            :allow_blank => false,
-            :unless => :book_id
+            presence: true,
+            allow_blank: false,
+            unless: Proc.new { |a| a.book_id.present? }
 
   validates :book_title,
-            :presence => true,
-            :allow_blank => false,
-            :unless => :book_id
+            presence: true,
+            allow_blank: false,
+            unless: Proc.new { |a| a.book_id.present? }
 
   validates :book_genre, :presence => true,
             :allow_blank => false,
-            :unless => :book_id
+            unless: Proc.new { |a| a.book_id.present? }
 
   validates :comment,
-            :length => {:maximum => 255},
-            :allow_blank => true
+            length: { maximum: 255 },
+            allow_blank: true
 
   validates :skypename,
-            :length => {:in => 4..30},
-            :format => {:with => /^[-_.a-zA-Z0-9]{4,30}$/},
-            :allow_blank => true
+            length:  { in: 4..30 },
+            format: { with: /\A[-_.a-zA-Z0-9]{4,30}\z/ },
+            allow_blank: true
 
   validates :phone,
-            :format => {:with => /^[\(\)0-9\- \+\.]{10,17}$/,
-                        :message => I18n.t("errors.messages.phone_format")},
-            :length => {:minimum => 10,
-                        :maximum => 15,
-                        :tokenizer => lambda { |str| str.scan(/\d/) },
-                        :message => I18n.t("errors.messages.phone_format")
+            format: { with: /\A[\(\)0-9\- \+\.]{10,17}\z/,
+                        message: I18n.t("errors.messages.phone_format") },
+            length: { minimum: 10,
+                        maximum: 15,
+                        tokenizer: lambda { |str| str.scan(/\d/) },
+                        message: I18n.t("errors.messages.phone_format")
             },
-            :allow_blank => true
+            allow_blank: true
 
   validates :cityid,
-            :numericality => {:greater_than_or_equal_to => -1},
-            :allow_blank => false
+            numericality: { greater_than_or_equal_to: -1 },
+            allow_blank: false
 
   validates :price,
-            :numericality => {:greater_than_or_equal_to => 0,
-                              :only_integer => true
+            numericality: { greater_than_or_equal_to: 0,
+                              only_integer: true
             },
-            :allow_nil => false # default is Zero
+            allow_nil: false # default is Zero
 
   validates :book_id,
-            :presence => true,
-            :allow_nil => false
+            presence: true,
+            allow_nil: false
 
   validates :user_id,
-            :presence => true,
-            :allow_nil => false
+            presence: true,
+            allow_nil: false
 
   has_attached_file :cover,
                     :whiny_thumbnails => true,
@@ -82,18 +78,18 @@ class Lot < ActiveRecord::Base
                         :x200 => "-gravity center -extent 200x200 -quality 70",
                         :x120 => "-gravity center -extent 120x120 -quality 72"}
 
-  validates_attachment_size :cover, :less_than => 4.megabytes, :message => I18n.t('paperclip.errors.upload_size')
+  validates_attachment_size :cover, less_than: 4.megabytes, message: I18n.t('paperclip.errors.upload_size')
 
   validates_attachment_content_type :cover,
-                                    :content_type => %w(image/jpeg image/pjpeg image/x-png image/png image/tif image/tiff image/bmp image/gif),
-                                    :message => I18n.t('paperclip.errors.img_type')
+                                    content_type: %w(image/jpeg image/pjpeg image/x-png image/png image/tif image/tiff image/bmp image/gif),
+                                    message: I18n.t('paperclip.errors.img_type')
 
   validate :file_dimensions, :unless => "errors.any? || !cover.present?", :on => :create
 
   before_post_process :check_file_size
 
-  scope :fresh_first, :order => 'lots.updated_at DESC'
-  scope :old_first, :order => 'lots.updated_at ASC'
+  scope :fresh_first, -> { order('lots.updated_at DESC') }
+  scope :old_first, -> { order('lots.updated_at ASC') }
 
   scope :active, :conditions => {:is_active => true}
   scope :inactive, :conditions => {:is_active => false}
@@ -206,19 +202,17 @@ class Lot < ActiveRecord::Base
     end
   end
 
-  def get_cover(style)
+  def book_cover(style)
     if cover.present? # relying on paperclip :default_url option for missing attachment
       cover.url(style)
     else
-      book.get_cover(style)
+      book.book_cover(style)
     end
   end
 
   def cityname
     Globals::CITIES[cityid]
   end
-
-  private
 
   def file_dimensions
     #system("open " + cover.path(:original))

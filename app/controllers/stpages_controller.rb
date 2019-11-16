@@ -1,15 +1,19 @@
 class StpagesController < ApplicationController
-  caches_page :error_404, :error_500
+  require 'actionpack/action_caching'
+
+  caches_action :error_404, :error_500
 
   def error_500
-    unless params[:forcache]
-      render :status => 500
-    end
+    render status: :internal_server_error unless forcache
   end
 
   def error_404
-    unless params[:forcache]
-      render :status => 404
-    end
+    render status: :not_found unless forcache
+  end
+
+  private
+
+  def forcache
+    params[:forcache]
   end
 end

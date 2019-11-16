@@ -15,7 +15,6 @@ Azbuker::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS
-  config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
@@ -33,10 +32,10 @@ Azbuker::Application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
-
+  config.eager_load = true
   # See everything in the log (default is :info)
   config.log_level = :fatal
-
+  config.log_formatter = ::Logger::Formatter.new
   # Use a different logger for distributed setups
   #config.logger = SyslogLogger.new
 
