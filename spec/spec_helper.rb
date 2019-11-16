@@ -10,7 +10,7 @@ end
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
+# require 'rspec/autorun'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'paperclip/matchers'
@@ -55,6 +55,9 @@ RSpec.configure do |config|
   # http://stackoverflow.com/questions/8862967/visit-method-not-found-in-my-rspec
   config.include Capybara::DSL
 
+  # This feature requires that you set a file for RSpec to persist some state between runs.
+  # https://til.hashrocket.com/posts/2ab099c7e8-rerun-only-failures-with-rspec
+  config.example_status_persistence_file_path = "spec/last_statement-failed_tests.txt"
 
   def login(user, backw_path = root_path, confirm = true)
     if user.confirmation_token.present? && user.confirmed_at.blank? && confirm
@@ -64,8 +67,8 @@ RSpec.configure do |config|
     else
       visit user_session_path
 
-      within(:xpath, ".//form[@id='qwe']") do
-      #within(:xpath, ".//form[@action='#{user_session_path}']") do
+      #within(:xpath, ".//form[@id='qwe']") do
+      within(:xpath, ".//form[@action='#{user_session_path}']") do
         fill_in 'user_email', :with => user.email
         fill_in 'user_password', :with => user.password
         click_button "Войти"

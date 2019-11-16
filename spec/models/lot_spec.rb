@@ -189,17 +189,24 @@ describe Lot do
       4.times do
         lot = book.lots.delete_at(0)
         lot.destroy
+        book.reload
       end
-      book.reload
+#      book.reload
       book.lots_count.should == 19
       book.lots.length.should == 19
       book.lots.active.length.should == 19
 
-      15.times do
-        lot = book.lots.delete_at(0)
+      lots = book.lots.take(15)
+      
+      lots.each do |lot|
         lot.is_active = false
         lot.save
       end
+    #15.times do
+    #  lot = book.lots.delete_at(0)
+    #  lot.is_active = false
+    #  lot.save
+    #end
 
       book.reload
       book.lots.active.count.should == 4

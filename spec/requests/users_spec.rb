@@ -65,7 +65,7 @@ describe "Users" do
     end
 
     it "should n't allow anonym user" do
-      logout(@user).should be_true
+      logout(@user).should be_truthy
       visit edit_user_registration_path
       page.current_path.should == new_user_session_path
       page.should have_selector("div.alert-message.error")
@@ -112,13 +112,13 @@ describe "Users" do
       update_reg(@user.nickname, '', '', 0, @user.password, new_pass)
 
       page.current_path.should == show_user_path(@user)
-      page.should match_selector_content("div.alert-message", I18n.t("devise.registrations.updated"))
+      page.should match_selector_content("div.alert-message", I18n.t("devise.registrations.updated_and_change_password"))
 
 
-      logout(@user).should be_true
-      login(@user).should be_false
+      logout(@user).should be_truthy
+      login(@user).should be_falsey
       @user.password = new_pass
-      login(@user).should be_true
+      login(@user).should be_truthy
     end
 
     it "should save Nickname/skype/phone with pass" do

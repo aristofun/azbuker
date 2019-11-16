@@ -336,7 +336,7 @@ RSpec.describe LotsController, type: :controller do
         }.to change(Author, :count).by(0)
 
         pushkin.reload
-        expect(Author.where("Пушкин").last).to match_array [pushkin]
+        expect(Author.where(last: "Пушкин")).to match_array([pushkin])
         expect(pushkin.full).to eq "А С Пушкин"
         expect(pushkin.books[0].title).to eq book[:title]
 
