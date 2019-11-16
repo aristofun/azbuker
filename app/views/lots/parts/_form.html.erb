@@ -2,7 +2,8 @@
    book_edit ||= false
    book_disabled ||= false
 %>
-<%= form_for(@lot, :html => {:class => "form-stacked form-lot"}, :builder => BootstrapFormBuilder) do |f| %>
+    <%= form_for(:lot, :html => {:class => "form-stacked form-lot", :id => 'new_lot'}, :url => lots_path, 
+                 :builder => BootstrapFormBuilder) do |f| %>
     <div class="row" id="lot_form">
       <div class="span7">
         <%= f.text_field :book_title, :class => "span7", :size => 30,
