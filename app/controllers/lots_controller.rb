@@ -250,7 +250,7 @@ class LotsController < ApplicationController
   end
 
   def buildlot
-    @lot = Lot.new#(params[:lot])
+    @lot = Lot.new(lots_params)
   end
 
   def findlot
