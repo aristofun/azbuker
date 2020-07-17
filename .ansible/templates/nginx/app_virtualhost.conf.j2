@@ -1,12 +1,28 @@
 server {
     listen 80;
-    server_name www.{{ _server_url }} azbooker.ru;
-    rewrite  ^   http://{{ _server_url }}$request_uri;
+    listen [::]:80;
+
+    server_name *.{{ _server_url }} {{ _server_url }} azbooker.ru *.azbooker.ru;
+    return 301 https://{{ _server_url }}$request_uri;
 }
 
 server {
-  listen       80;
-  server_name {{ _server_url }};
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    include /etc/nginx/certbot.conf;
+
+    server_name www.{{ _server_url }};
+    return  301  https://{{ _server_url }}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    include /etc/nginx/certbot.conf;
+
+    server_name {{ _server_url }};
+
   root {{ _apps_path }}/{{ _host_name }}/current/public;
 
   passenger_ruby /home/{{ _remote_user }}/.rbenv/versions/{{ _ruby }}/bin/ruby;
