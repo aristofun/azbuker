@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 3.2.22'
 gem 'pg', '~> 0.21'
-gem 'rake', '< 11.0'
+gem 'rake', '< 13.0'
 
 gem 'devise', '~> 2.0'
 gem 'cancan', '~> 1.0'
